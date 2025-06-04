@@ -1,0 +1,53 @@
+# Dependencies
+usa-location/node_modules/
+usa-location/.pnp
+usa-location/.pnp.js
+
+# Testing
+usa-location/coverage/
+
+# Next.js
+usa-location/.next/
+usa-location/out/
+usa-location/dist/
+
+# Production
+usa-location/build/
+
+# Misc
+usa-location/.DS_Store
+usa-location/*.tsbuildinfo
+usa-location/next-env.d.ts
+
+# Debug
+usa-location/npm-debug.log*
+usa-location/yarn-debug.log*
+usa-location/yarn-error.log*
+
+# Local env files
+usa-location/.env*.local
+
+# Vercel
+usa-location/.vercel
+
+# TypeScript
+usa-location/*.tsbuildinfo
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Development files (已清理)
+issues/
+docs/development/
+temp/
+scratch/
