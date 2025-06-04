@@ -9,8 +9,8 @@ const nextConfig: NextConfig = {
     unoptimized: true
   },
   // GitHub Pages部署配置
-  basePath: process.env.NODE_ENV === 'production' ? '/USAlocation' : '',
-  assetPrefix: process.env.NODE_ENV === 'production' ? '/USAlocation/' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/ToolsBox' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/ToolsBox/' : '',
 };
 
 export default nextConfig;
