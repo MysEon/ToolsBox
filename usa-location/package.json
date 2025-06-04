@@ -1,7 +1,8 @@
 {
-  "name": "usa-location",
-  "version": "0.1.0",
+  "name": "zyarin-toolbox",
+  "version": "1.0.0",
   "private": true,
+  "description": "zyarin工具箱 - 集成多种实用开发工具的现代化工具集合",
   "scripts": {
     "dev": "next dev --turbopack",
     "dev-normal": "next dev",
