@@ -106,8 +106,37 @@ Route (app)                                 Size  First Load JS
 ## 访问地址
 部署完成后访问：`https://[username].github.io/USAlocation/`
 
+## 重要修正：项目结构
+**发现问题：** 之前配置错误，`USAlocation`才是项目根目录，`usa-location`是子目录。
+
+### 修正内容
+1. **GitHub Actions位置修正**
+   - 从 `usa-location/.github/workflows/deploy.yml`
+   - 移动到 `USAlocation/.github/workflows/deploy.yml`（项目根目录）
+
+2. **工作流配置修正**
+   - 添加 `working-directory: ./usa-location` 到所有npm命令
+   - 修正 `cache-dependency-path: './usa-location/package-lock.json'`
+   - 修正构建路径为 `./usa-location/dist`
+
+3. **文档位置修正**
+   - 在项目根目录创建 `DEPLOYMENT.md`
+   - 说明正确的项目结构
+
+### 正确的项目结构
+```
+USAlocation/                    # GitHub仓库根目录
+├── .github/workflows/deploy.yml   # GitHub Actions配置
+├── usa-location/               # Next.js应用
+│   ├── src/                    # 源代码
+│   ├── package.json            # 依赖配置
+│   └── dist/                   # 构建输出
+└── DEPLOYMENT.md               # 部署文档
+```
+
 ## 完成状态
 ✅ GitHub Pages部署配置完成！
+✅ 项目结构问题已修正！
 ✅ 自动化CI/CD流程就绪！
 ✅ 静态文件构建成功！
 ✅ 部署文档完善！

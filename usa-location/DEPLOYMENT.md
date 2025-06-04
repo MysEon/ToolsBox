@@ -16,28 +16,47 @@
 - **基础路径**: `/USAlocation`
 - **图片优化**: 已禁用（GitHub Pages兼容）
 
-## 🛠️ 部署步骤
+## 🛠️ 完整部署步骤
 
 ### 1. 启用GitHub Pages
 1. 进入GitHub仓库设置页面
 2. 找到 "Pages" 设置项
 3. 在 "Source" 中选择 "GitHub Actions"
-4. 保存设置
+4. **重要：如果GitHub推荐了Next.js模板，请忽略或删除**
 
-### 2. 推送代码
+### 2. 清理冲突的workflow文件
+1. 进入仓库的 `.github/workflows/` 目录
+2. 删除除了 `deploy.yml` 之外的所有文件（如 `nextjs.yml`）
+3. 确保只有我们的 `deploy.yml` 文件存在
+
+### 3. 推送代码
 ```bash
 git add .
 git commit -m "feat: 配置GitHub Pages部署"
 git push origin main
 ```
 
-### 3. 查看部署状态
+### 4. 查看部署状态
 1. 进入仓库的 "Actions" 标签页
-2. 查看最新的工作流运行状态
+2. 查看 "Deploy to GitHub Pages" 工作流
 3. 等待部署完成（通常需要2-5分钟）
+4. 如果有错误，点击查看详细日志
 
-### 4. 访问网站
+### 5. 访问网站
 部署完成后，访问：`https://[你的GitHub用户名].github.io/USAlocation/`
+
+### 6. 常见问题解决
+
+#### 如果Actions报错：
+1. **权限问题**：确保仓库设置中启用了Actions权限
+2. **workflow冲突**：删除GitHub自动生成的workflow文件
+3. **分支名称**：确认主分支名是 `main` 还是 `master`
+4. **依赖问题**：检查package.json中的依赖是否完整
+
+#### 如果页面404：
+1. 等待几分钟，DNS可能需要时间传播
+2. 检查GitHub Pages设置是否正确
+3. 确认workflow成功完成
 
 ## 🔧 本地测试生产构建
 
