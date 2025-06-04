@@ -78,7 +78,9 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
               </Link>
               
               <a
-                href="#"
+                href="https://github.com/MysEon/ToolsBox"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all duration-200"
               >
                 <Github className="h-4 w-4" />
@@ -118,7 +120,9 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
               </Link>
               
               <a
-                href="#"
+                href="https://github.com/MysEon/ToolsBox"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center space-x-2 px-4 py-3 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

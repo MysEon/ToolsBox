@@ -262,7 +262,7 @@ export default function Home() {
                   集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案。
                 </p>
                 <div className="flex space-x-3">
-                  <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="https://github.com/MysEon/ToolsBox" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Github className="h-5 w-5" />
                   </a>
                   <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
