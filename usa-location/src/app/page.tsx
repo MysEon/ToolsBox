@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Header from '../components/Layout/Header';
 import ToolCard from '../components/ToolCard';
 import SearchBar from '../components/SearchBar';
-import { tools, categories, getToolsByCategory } from '../data/tools';
+import { tools, categories } from '../data/tools';
 import { searchTools, getSearchSuggestions } from '../utils/searchUtils';
 import {
   Wrench,
@@ -233,7 +233,7 @@ export default function Home() {
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">未找到相关工具</h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              抱歉，没有找到与 "<span className="font-medium text-gray-900">{searchTerm}</span>" 相关的工具。
+              抱歉，没有找到与 &ldquo;<span className="font-medium text-gray-900">{searchTerm}</span>&rdquo; 相关的工具。
               <br />请尝试其他关键词或浏览所有工具。
             </p>
             <button
