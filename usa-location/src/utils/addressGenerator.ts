@@ -103,7 +103,7 @@ export function generatePersonalInfo(): PersonalInfo {
     lastName,
     fullName: `${firstName} ${lastName}`,
     email: faker.internet.email({ firstName, lastName }),
-    phone: faker.phone.number('(###) ###-####'),
+    phone: faker.phone.number(),
     ssn: generateSSN(),
     dateOfBirth: birthDate.toLocaleDateString('en-US'),
     age,

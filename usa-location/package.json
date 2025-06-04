@@ -1,13 +1,16 @@
 {
-  "name": "usa-location",
-  "version": "0.1.0",
+  "name": "zyarin-toolbox",
+  "version": "1.0.0",
   "private": true,
+  "description": "zyarin工具箱 - 集成多种实用开发工具的现代化工具集合",
   "scripts": {
     "dev": "next dev --turbopack",
     "dev-normal": "next dev",
     "build": "next build",
+    "export": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "npm run export"
   },
   "dependencies": {
     "@faker-js/faker": "^9.8.0",
@@ -21,6 +24,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/leaflet": "^1.9.18",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

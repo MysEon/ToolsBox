@@ -1,232 +1,307 @@
 'use client';
 
-import React, { useState } from 'react';
-import GeneratorSettings from '../components/GeneratorSettings';
-import GeneratorResults from '../components/GeneratorResults';
-import MapComponent from '../components/MapComponent';
-import { CompleteProfile } from '../utils/addressGenerator';
+import React, { useState, useMemo } from 'react';
+import Header from '../components/Layout/Header';
+import ToolCard from '../components/ToolCard';
+import SearchBar from '../components/SearchBar';
+import { tools, categories } from '../data/tools';
+import { searchTools, getSearchSuggestions } from '../utils/searchUtils';
 import {
-  MapPin,
-  Settings,
-  Info,
+  Wrench,
+  Sparkles,
+  Users,
+  TrendingUp,
+  Star,
+  Clock,
+  CheckCircle,
   Github,
   Twitter,
   Mail,
-  Shield,
-  Globe,
-  Menu,
-  X
+  Search as SearchIcon
 } from 'lucide-react';
 
 export default function Home() {
-  const [generatedProfiles, setGeneratedProfiles] = useState<CompleteProfile[]>([]);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // 处理生成的档案数据
-  const handleProfilesGenerated = (profiles: CompleteProfile[]) => {
-    setGeneratedProfiles(profiles);
-  };
+  // 根据搜索词过滤工具
+  const filteredTools = useMemo(() => {
+    return searchTools(tools, searchTerm);
+  }, [searchTerm]);
+
+  // 获取搜索建议
+  const searchSuggestions = useMemo(() => {
+    return getSearchSuggestions(tools, searchTerm);
+  }, [searchTerm]);
+
+  const activeTools = filteredTools.filter(tool => tool.status === 'active');
+  const comingSoonTools = filteredTools.filter(tool => tool.status === 'coming-soon');
+
+  // 是否有搜索结果
+  const hasSearchResults = filteredTools.length > 0;
+  const isSearching = searchTerm.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
       {/* 头部导航 */}
-      <header className="gradient-animated shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            {/* Logo和标题 */}
-            <div className="flex items-center space-x-3">
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2">
-                <Globe className="h-8 w-8 text-white" />
+      <Header />
+
+      {/* 主要内容 */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* 欢迎区域 */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
+            <Wrench className="h-12 w-12 text-white" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            欢迎使用
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              zyarin工具箱
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
+          </p>
+
+          {/* 统计信息 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="flex items-center justify-center mb-2">
+                <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
+                <span className="text-2xl font-bold text-gray-900">{activeTools.length}</span>
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">
-                  美国虚拟身份生成器
-                </h1>
-                <p className="text-blue-100 text-sm">
-                  专业的测试数据生成工具
-                </p>
-              </div>
+              <p className="text-gray-600 text-sm">可用工具</p>
             </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="flex items-center justify-center mb-2">
+                <Clock className="h-6 w-6 text-orange-500 mr-2" />
+                <span className="text-2xl font-bold text-gray-900">{comingSoonTools.length}</span>
+              </div>
+              <p className="text-gray-600 text-sm">即将推出</p>
+            </div>
+            <div className="bg-white rounded-lg shadow-md p-4">
+              <div className="flex items-center justify-center mb-2">
+                <Star className="h-6 w-6 text-yellow-500 mr-2" />
+                <span className="text-2xl font-bold text-gray-900">100%</span>
+              </div>
+              <p className="text-gray-600 text-sm">免费使用</p>
+            </div>
+          </div>
+        </div>
 
-            {/* 桌面端导航 */}
-            <nav className="hidden md:flex items-center space-x-1">
-              <a
-                href="#generator"
-                className="nav-link flex items-center space-x-2 px-4 py-2 rounded-lg text-white hover:bg-white/20 transition-all duration-200 font-medium"
-              >
-                <Settings className="h-4 w-4" />
-                <span>身份生成器</span>
-              </a>
-              <a
-                href="#map"
-                className="nav-link flex items-center space-x-2 px-4 py-2 rounded-lg text-blue-100 hover:text-white hover:bg-white/20 transition-all duration-200"
-              >
-                <MapPin className="h-4 w-4" />
-                <span>地图定位</span>
-              </a>
-              <a
-                href="#about"
-                className="nav-link flex items-center space-x-2 px-4 py-2 rounded-lg text-blue-100 hover:text-white hover:bg-white/20 transition-all duration-200"
-              >
-                <Info className="h-4 w-4" />
-                <span>关于</span>
-              </a>
-            </nav>
+        {/* 搜索栏 */}
+        <div className="mb-8">
+          <div className="text-center mb-6">
+            <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-green-500 to-blue-600 rounded-full mb-4">
+              <SearchIcon className="h-6 w-6 text-white" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">快速查找工具</h2>
+            <p className="text-gray-600">输入关键词搜索您需要的工具</p>
+          </div>
 
-            {/* 移动端菜单按钮 */}
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            suggestions={searchSuggestions}
+            placeholder="搜索工具名称、功能、分类..."
+          />
+        </div>
+
+        {/* 搜索结果提示 */}
+        {isSearching && (
+          <div className="mb-6 text-center">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-full text-sm">
+              <SearchIcon className="h-4 w-4" />
+              <span>
+                {hasSearchResults
+                  ? `找到 ${filteredTools.length} 个相关工具`
+                  : '未找到相关工具'
+                }
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* 工具展示区域 */}
+        {!isSearching || hasSearchResults ? (
+          <div className="space-y-8">
+            {/* 可用工具 */}
+            {activeTools.length > 0 && (
+              <section>
+                <div className="flex items-center mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <CheckCircle className="h-6 w-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        {isSearching ? '搜索结果 - 可用工具' : '可用工具'}
+                      </h2>
+                      <p className="text-gray-600">
+                        {isSearching ? `找到 ${activeTools.length} 个可用工具` : '立即使用这些强大的工具'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {activeTools.map((tool) => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 即将推出的工具 */}
+            {comingSoonTools.length > 0 && (
+              <section>
+                <div className="flex items-center mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-orange-100 rounded-lg">
+                      <Clock className="h-6 w-6 text-orange-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        {isSearching ? '搜索结果 - 即将推出' : '即将推出'}
+                      </h2>
+                      <p className="text-gray-600">
+                        {isSearching ? `找到 ${comingSoonTools.length} 个即将推出的工具` : '敬请期待更多实用工具'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {comingSoonTools.map((tool) => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 特色介绍 - 只在非搜索状态或搜索有结果时显示 */}
+            {(!isSearching || hasSearchResults) && (
+              <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
+                    <Sparkles className="h-6 w-6 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3">为什么选择 zyarin工具箱？</h2>
+                  <p className="text-gray-600 max-w-2xl mx-auto">
+                    我们致力于为开发者和创作者提供最优质的工具体验
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-3">
+                      <TrendingUp className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">高效便捷</h3>
+                    <p className="text-gray-600 text-sm">
+                      简洁直观的界面设计，让您快速上手，提升工作效率
+                    </p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center p-3 bg-green-100 rounded-full mb-3">
+                      <Star className="h-5 w-5 text-green-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">完全免费</h3>
+                    <p className="text-gray-600 text-sm">
+                      所有工具完全免费使用，无需注册，无使用限制
+                    </p>
+                  </div>
+
+                  <div className="text-center">
+                    <div className="inline-flex items-center justify-center p-3 bg-purple-100 rounded-full mb-3">
+                      <Users className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">持续更新</h3>
+                    <p className="text-gray-600 text-sm">
+                      根据用户反馈持续优化，定期推出新功能和工具
+                    </p>
+                  </div>
+                </div>
+              </section>
+            )}
+          </div>
+        ) : (
+          /* 空搜索结果 */
+          <div className="text-center py-16">
+            <div className="inline-flex items-center justify-center p-4 bg-gray-100 rounded-full mb-6">
+              <SearchIcon className="h-12 w-12 text-gray-400" />
+            </div>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">未找到相关工具</h3>
+            <p className="text-gray-600 mb-8 max-w-md mx-auto">
+              抱歉，没有找到与 &ldquo;<span className="font-medium text-gray-900">{searchTerm}</span>&rdquo; 相关的工具。
+              <br />请尝试其他关键词或浏览所有工具。
+            </p>
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-white hover:bg-white/20 transition-colors"
+              onClick={() => setSearchTerm('')}
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              <span>清空搜索</span>
             </button>
           </div>
-
-          {/* 移动端导航菜单 */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden border-t border-white/20 py-4">
-              <nav className="flex flex-col space-y-2">
-                <a
-                  href="#generator"
-                  className="flex items-center space-x-2 px-4 py-3 rounded-lg text-white hover:bg-white/20 transition-all duration-200 font-medium"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Settings className="h-4 w-4" />
-                  <span>身份生成器</span>
-                </a>
-                <a
-                  href="#map"
-                  className="flex items-center space-x-2 px-4 py-3 rounded-lg text-blue-100 hover:text-white hover:bg-white/20 transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <MapPin className="h-4 w-4" />
-                  <span>地图定位</span>
-                </a>
-                <a
-                  href="#about"
-                  className="flex items-center space-x-2 px-4 py-3 rounded-lg text-blue-100 hover:text-white hover:bg-white/20 transition-all duration-200"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <Info className="h-4 w-4" />
-                  <span>关于</span>
-                </a>
-              </nav>
-            </div>
-          )}
-        </div>
-      </header>
-
-      {/* 主要内容 - 左右分栏布局 */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
-          {/* 左侧：生成设置 (30%) */}
-          <div className="lg:col-span-3">
-            <GeneratorSettings onProfilesGenerated={handleProfilesGenerated} />
-          </div>
-
-          {/* 右侧：生成结果和地图 (70%) */}
-          <div className="lg:col-span-7 space-y-6">
-            {/* 生成结果 */}
-            <GeneratorResults profiles={generatedProfiles} />
-
-            {/* 地图部分 */}
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-              <MapComponent profiles={generatedProfiles} />
-            </div>
-          </div>
-        </div>
+        )}
       </main>
 
       {/* 页脚 */}
-      <footer className="bg-gray-900 text-white">
+      <footer className="bg-gray-900 text-white mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* 主要页脚内容 */}
           <div className="py-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* 产品信息 */}
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
-                  <Globe className="h-6 w-6 text-blue-400" />
-                  <h3 className="text-lg font-semibold">虚拟身份生成器</h3>
+                  <Wrench className="h-6 w-6 text-blue-400" />
+                  <h3 className="text-lg font-semibold">zyarin工具箱</h3>
                 </div>
                 <p className="text-gray-300 text-sm leading-relaxed">
-                  专业的美国虚拟身份数据生成工具，为开发者和测试人员提供高质量的测试数据。
+                  集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案。
                 </p>
                 <div className="flex space-x-3">
-                  <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="https://github.com/zyarin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Github className="h-5 w-5" />
                   </a>
                   <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Twitter className="h-5 w-5" />
                   </a>
-                  <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="mailto:contact@zyarin.com" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Mail className="h-5 w-5" />
                   </a>
                 </div>
               </div>
 
-              {/* 功能特性 */}
+              {/* 工具分类 */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold">功能特性</h3>
+                <h3 className="text-lg font-semibold">工具分类</h3>
                 <ul className="space-y-2 text-sm text-gray-300">
-                  <li className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                    <span>真实地址生成</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                    <span>个人信息生成</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                    <span>地图可视化</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
-                    <span>批量导出</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* 使用指南 */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">使用指南</h3>
-                <ul className="space-y-2 text-sm text-gray-300">
-                  <li>
-                    <a href="#generator" className="hover:text-blue-400 transition-colors">
-                      如何生成身份
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#map" className="hover:text-blue-400 transition-colors">
-                      地图使用说明
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#about" className="hover:text-blue-400 transition-colors">
-                      常见问题
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="hover:text-blue-400 transition-colors">
-                      API 文档
-                    </a>
-                  </li>
+                  {categories.map((category) => (
+                    <li key={category} className="flex items-center space-x-2">
+                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full"></div>
+                      <span>{category}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               {/* 法律声明 */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold flex items-center space-x-2">
-                  <Shield className="h-5 w-5 text-yellow-400" />
-                  <span>法律声明</span>
+                  <Sparkles className="h-5 w-5 text-yellow-400" />
+                  <span>使用说明</span>
                 </h3>
                 <div className="text-sm text-gray-300 space-y-2">
                   <p>
-                    本工具生成的所有信息均为虚构数据，仅供测试和开发使用。
+                    所有工具完全免费使用，无需注册。
+                  </p>
+                  <p>
+                    生成的虚拟数据仅供测试和开发使用。
                   </p>
                   <p className="text-yellow-300">
-                    ⚠️ 请勿用于任何非法用途或欺诈行为
+                    ⚠️ 请遵守相关法律法规，合理使用工具
                   </p>
                 </div>
               </div>
@@ -237,7 +312,7 @@ export default function Home() {
           <div className="border-t border-gray-800 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="text-sm text-gray-400">
-                © 2024 美国虚拟身份生成器. 保留所有权利.
+                © 2024 zyarin工具箱. 保留所有权利.
               </div>
               <div className="flex items-center space-x-6 text-sm text-gray-400">
                 <a href="#" className="hover:text-blue-400 transition-colors">
@@ -246,7 +321,7 @@ export default function Home() {
                 <a href="#" className="hover:text-blue-400 transition-colors">
                   使用条款
                 </a>
-                <a href="#" className="hover:text-blue-400 transition-colors">
+                <a href="mailto:contact@zyarin.com" className="hover:text-blue-400 transition-colors">
                   联系我们
                 </a>
               </div>
