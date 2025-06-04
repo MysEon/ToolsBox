@@ -1,4 +1,4 @@
-# 🛠️ zyarin工具箱
+# 🛠️ 开发者工具箱
 
 一个集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案。
 
@@ -123,13 +123,12 @@ npm run dev
 
 ## 🤝 贡献
 
-欢迎提交Issue和Pull Request来帮助改进zyarin工具箱！
+欢迎提交Issue和Pull Request来帮助改进开发者工具箱！
 
 ## 📞 联系我们
 
-- GitHub: [https://github.com/zyarin](https://github.com/zyarin)
-- Email: contact@zyarin.com
+如有问题或建议，请通过GitHub Issues联系我们。
 
 ---
 
-**🛠️ zyarin工具箱 - 让开发更高效，让创作更便捷**
+**🛠️ 开发者工具箱 - 让开发更高效，让创作更便捷**
