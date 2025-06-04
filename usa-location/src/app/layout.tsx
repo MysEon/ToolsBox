@@ -13,10 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "美国虚拟身份生成器 - 专业的测试数据生成工具",
-  description: "专业的美国虚拟身份数据生成工具，为开发者和测试人员提供高质量的测试数据，包括真实地址、个人信息和地图可视化功能。",
-  keywords: "虚拟身份生成器,测试数据,美国地址,开发工具,数据生成",
-  authors: [{ name: "Virtual Identity Generator Team" }],
+  title: "开发者工具箱 - 高效便捷的开发工具集合",
+  description: "集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案，包括虚拟身份生成器、密码生成器、JSON格式化等工具。",
+  keywords: "开发者工具箱,开发工具,虚拟身份生成器,密码生成器,JSON格式化,开发效率",
+  authors: [{ name: "ToolsBox Team" }],
   viewport: "width=device-width, initial-scale=1",
 };
 
