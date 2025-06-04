@@ -51,7 +51,7 @@ open http://localhost:3001
 
 3. **自动部署**
    - GitHub Actions自动构建和部署
-   - 访问：`https://[username].github.io/USAlocation/`
+   - 访问：`https://[username].github.io/ToolsBox/`
 
 详细部署说明请查看 [DEPLOYMENT.md](./DEPLOYMENT.md)
 
@@ -67,7 +67,7 @@ open http://localhost:3001
 ## 📁 项目结构
 
 ```
-USAlocation/
+ToolsBox/
 ├── .github/workflows/deploy.yml    # GitHub Actions部署配置
 ├── usa-location/                   # Next.js应用
 │   ├── src/                        # 源代码

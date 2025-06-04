@@ -63,7 +63,7 @@ npm run dev
    ```
 
 3. **访问网站**
-   - 部署地址：`https://[username].github.io/USAlocation/`
+   - 部署地址：`https://[username].github.io/ToolsBox/`
    - 自动构建和部署
    - 支持自定义域名
 

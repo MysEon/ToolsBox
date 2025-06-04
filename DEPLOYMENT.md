@@ -5,7 +5,7 @@
 ## 📋 项目结构说明
 
 ```
-USAlocation/                    # 项目根目录（GitHub仓库根目录）
+ToolsBox/                       # 项目根目录（GitHub仓库根目录）
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions工作流
@@ -49,7 +49,7 @@ git push origin main
 4. 如果有错误，点击查看详细日志
 
 ### 6. 访问网站
-部署完成后，访问：`https://[你的GitHub用户名].github.io/USAlocation/`
+部署完成后，访问：`https://[你的GitHub用户名].github.io/ToolsBox/`
 
 ## ⚙️ 配置说明
 
@@ -67,8 +67,8 @@ const nextConfig: NextConfig = {
   trailingSlash: true,           // 添加尾部斜杠
   distDir: 'dist',               // 构建目录
   images: { unoptimized: true }, // 禁用图片优化
-  basePath: '/USAlocation',      // GitHub Pages路径（仓库名）
-  assetPrefix: '/USAlocation/',  // 资源前缀
+  basePath: '/ToolsBox',         // GitHub Pages路径（仓库名）
+  assetPrefix: '/ToolsBox/',     // 资源前缀
 };
 ```
 
