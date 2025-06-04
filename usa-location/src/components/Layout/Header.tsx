@@ -50,7 +50,7 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white group-hover:text-blue-100 transition-colors">
-                  {title || 'zyarin工具箱'}
+                  {title || '开发者工具箱'}
                 </h1>
                 {subtitle && (
                   <p className="text-blue-100 text-sm">
@@ -78,9 +78,7 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
               </Link>
               
               <a
-                href="https://github.com/zyarin"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#"
                 className="flex items-center space-x-2 px-4 py-2 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all duration-200"
               >
                 <Github className="h-4 w-4" />
@@ -120,18 +118,16 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
               </Link>
               
               <a
-                href="https://github.com/zyarin"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#"
                 className="flex items-center space-x-2 px-4 py-3 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <Github className="h-4 w-4" />
                 <span>GitHub</span>
               </a>
-              
+
               <a
-                href="mailto:contact@zyarin.com"
+                href="#"
                 className="flex items-center space-x-2 px-4 py-3 rounded-lg text-blue-100 hover:text-white hover:bg-white/10 transition-all duration-200"
                 onClick={() => setIsMobileMenuOpen(false)}
               >

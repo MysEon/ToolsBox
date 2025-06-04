@@ -55,7 +55,7 @@ export default function Home() {
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             欢迎使用
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              zyarin工具箱
+              开发者工具箱
             </span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
@@ -185,7 +185,7 @@ export default function Home() {
                   <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
                     <Sparkles className="h-6 w-6 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">为什么选择 zyarin工具箱？</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-3">为什么选择开发者工具箱？</h2>
                   <p className="text-gray-600 max-w-2xl mx-auto">
                     我们致力于为开发者和创作者提供最优质的工具体验
                   </p>
@@ -256,19 +256,19 @@ export default function Home() {
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <Wrench className="h-6 w-6 text-blue-400" />
-                  <h3 className="text-lg font-semibold">zyarin工具箱</h3>
+                  <h3 className="text-lg font-semibold">开发者工具箱</h3>
                 </div>
                 <p className="text-gray-300 text-sm leading-relaxed">
                   集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案。
                 </p>
                 <div className="flex space-x-3">
-                  <a href="https://github.com/zyarin" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Github className="h-5 w-5" />
                   </a>
                   <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Twitter className="h-5 w-5" />
                   </a>
-                  <a href="mailto:contact@zyarin.com" className="text-gray-400 hover:text-blue-400 transition-colors">
+                  <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
                     <Mail className="h-5 w-5" />
                   </a>
                 </div>
@@ -312,7 +312,7 @@ export default function Home() {
           <div className="border-t border-gray-800 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="text-sm text-gray-400">
-                © 2024 zyarin工具箱. 保留所有权利.
+                © 2024 开发者工具箱. 保留所有权利.
               </div>
               <div className="flex items-center space-x-6 text-sm text-gray-400">
                 <a href="#" className="hover:text-blue-400 transition-colors">
@@ -321,7 +321,7 @@ export default function Home() {
                 <a href="#" className="hover:text-blue-400 transition-colors">
                   使用条款
                 </a>
-                <a href="mailto:contact@zyarin.com" className="hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-blue-400 transition-colors">
                   联系我们
                 </a>
               </div>

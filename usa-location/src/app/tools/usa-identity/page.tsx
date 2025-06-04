@@ -138,7 +138,7 @@ export default function USAIdentityGenerator() {
           <div className="border-t border-gray-800 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="text-sm text-gray-400">
-                © 2024 zyarin工具箱 - 美国虚拟身份生成器. 保留所有权利.
+                © 2024 开发者工具箱 - 美国虚拟身份生成器. 保留所有权利.
               </div>
               <div className="flex items-center space-x-6 text-sm text-gray-400">
                 <a href="#" className="hover:text-blue-400 transition-colors">
@@ -147,7 +147,7 @@ export default function USAIdentityGenerator() {
                 <a href="#" className="hover:text-blue-400 transition-colors">
                   使用条款
                 </a>
-                <a href="mailto:contact@zyarin.com" className="hover:text-blue-400 transition-colors">
+                <a href="#" className="hover:text-blue-400 transition-colors">
                   联系我们
                 </a>
               </div>
