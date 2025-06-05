@@ -1,4 +1,4 @@
-import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download } from 'lucide-react';
+import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock } from 'lucide-react';
 
 export interface Tool {
   id: string;
@@ -34,6 +34,17 @@ export const tools: Tool[] = [
     category: '开发工具',
     features: ['官方下载', '安装教程', '多平台支持', '分类筛选', '版本信息'],
     color: 'from-green-500 to-blue-600'
+  },
+  {
+    id: 'crypto-tool',
+    name: '🔐 双向文本加密解密',
+    description: '支持主流加密算法和古典密码的双向文本加密解密工具，提供AES、DES、凯撒密码等多种加密方式',
+    icon: Lock,
+    href: '/tools/crypto-tool',
+    status: 'active',
+    category: '安全工具',
+    features: ['主流加密', '古典密码', '双向转换', '密钥管理', '多种算法'],
+    color: 'from-red-500 to-pink-600'
   },
   {
     id: 'password-generator',
