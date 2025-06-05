@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Header from '../components/Layout/Header';
 import ToolCard from '../components/ToolCard';
 import SearchBar from '../components/SearchBar';
+import { NewToolNotification } from '../components/NewToolNotification';
 import { tools, categories } from '../data/tools';
 import { searchTools, getSearchSuggestions } from '../utils/searchUtils';
 import {
@@ -329,6 +330,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* 新工具通知 */}
+      <NewToolNotification />
     </div>
   );
 }

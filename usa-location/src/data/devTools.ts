@@ -184,12 +184,12 @@ export const devTools: DevTool[] = [
     color: 'from-gray-700 to-gray-900'
   },
 
-  // 数据库
+  // 关系型数据库
   {
     id: 'mysql',
     name: 'MySQL',
     description: '世界上最流行的开源关系型数据库管理系统',
-    category: '数据库',
+    category: '关系型数据库',
     icon: Database,
     officialUrl: 'https://www.mysql.com/',
     downloadUrl: 'https://dev.mysql.com/downloads/',
@@ -203,7 +203,7 @@ export const devTools: DevTool[] = [
     id: 'postgresql',
     name: 'PostgreSQL',
     description: '功能强大的开源对象关系型数据库系统',
-    category: '数据库',
+    category: '关系型数据库',
     icon: Database,
     officialUrl: 'https://www.postgresql.org/',
     downloadUrl: 'https://www.postgresql.org/download/',
@@ -213,11 +213,13 @@ export const devTools: DevTool[] = [
     features: ['ACID兼容', '扩展性', 'JSON支持', '全文搜索', '并发控制'],
     color: 'from-blue-500 to-indigo-600'
   },
+
+  // NoSQL数据库
   {
     id: 'mongodb',
     name: 'MongoDB',
     description: '流行的NoSQL文档数据库，适用于现代应用开发',
-    category: '数据库',
+    category: 'NoSQL数据库',
     icon: Database,
     officialUrl: 'https://www.mongodb.com/',
     downloadUrl: 'https://www.mongodb.com/try/download/community',
@@ -227,11 +229,13 @@ export const devTools: DevTool[] = [
     features: ['文档存储', '水平扩展', '灵活模式', '聚合框架', '分片支持'],
     color: 'from-green-500 to-green-700'
   },
+
+  // 内存数据库
   {
     id: 'redis',
     name: 'Redis',
     description: '高性能的内存数据结构存储，用作数据库、缓存和消息代理',
-    category: '数据库',
+    category: '内存数据库',
     icon: Database,
     officialUrl: 'https://redis.io/',
     downloadUrl: 'https://redis.io/downloads/',
@@ -240,6 +244,122 @@ export const devTools: DevTool[] = [
     tutorialUrl: 'https://redis.io/docs/',
     features: ['内存存储', '数据结构', '发布订阅', '事务支持', '集群模式'],
     color: 'from-red-500 to-red-600'
+  },
+
+  // 向量数据库
+  {
+    id: 'milvus',
+    name: 'Milvus',
+    description: '开源向量数据库，专为GenAI应用构建，支持大规模向量相似性搜索',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://milvus.io/',
+    downloadUrl: 'https://milvus.io/docs/install_standalone-docker.md',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://milvus.io/docs/',
+    features: ['向量搜索', '高性能', '可扩展', 'AI集成', '多种部署'],
+    color: 'from-blue-600 to-purple-700'
+  },
+  {
+    id: 'weaviate',
+    name: 'Weaviate',
+    description: 'AI原生向量数据库，支持混合搜索和多模态数据处理',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://weaviate.io/',
+    downloadUrl: 'https://weaviate.io/developers/weaviate/installation',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://weaviate.io/developers/weaviate',
+    features: ['混合搜索', '多模态', 'GraphQL API', '云原生', 'AI集成'],
+    color: 'from-green-600 to-teal-700'
+  },
+  {
+    id: 'chroma',
+    name: 'Chroma',
+    description: '开源嵌入式数据库，专为AI应用设计的向量存储解决方案',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://www.trychroma.com/',
+    downloadUrl: 'https://docs.trychroma.com/getting-started',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://docs.trychroma.com/',
+    features: ['嵌入式', '简单易用', 'Python友好', '内存高效', 'AI优化'],
+    color: 'from-orange-500 to-pink-600'
+  },
+  {
+    id: 'pinecone',
+    name: 'Pinecone',
+    description: '完全托管的向量数据库服务，为生产环境的AI应用提供高性能搜索',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://www.pinecone.io/',
+    downloadUrl: 'https://docs.pinecone.io/docs/quickstart',
+    platforms: ['云服务'],
+    license: 'Freemium',
+    tutorialUrl: 'https://docs.pinecone.io/',
+    features: ['托管服务', '实时更新', '高可用', '自动扩展', '企业级'],
+    color: 'from-indigo-600 to-blue-700'
+  },
+  {
+    id: 'qdrant',
+    name: 'Qdrant',
+    description: '高性能开源向量数据库，专为大规模AI应用设计，支持Rust构建',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://qdrant.tech/',
+    downloadUrl: 'https://qdrant.tech/documentation/quick-start/',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://qdrant.tech/documentation/',
+    features: ['高性能', 'Rust构建', '云原生', '易部署', '企业级'],
+    color: 'from-purple-600 to-indigo-700'
+  },
+  {
+    id: 'faiss',
+    name: 'FAISS',
+    description: 'Facebook开源的高效相似性搜索和密集向量聚类库',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://github.com/facebookresearch/faiss',
+    downloadUrl: 'https://github.com/facebookresearch/faiss/blob/main/INSTALL.md',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://github.com/facebookresearch/faiss/wiki',
+    features: ['高效搜索', 'GPU加速', '大规模', '聚类算法', 'C++/Python'],
+    color: 'from-blue-500 to-cyan-600'
+  },
+  {
+    id: 'annoy',
+    name: 'Annoy',
+    description: 'Spotify开源的近似最近邻搜索库，内存高效且快速',
+    category: '向量数据库',
+    icon: Database,
+    officialUrl: 'https://github.com/spotify/annoy',
+    downloadUrl: 'https://github.com/spotify/annoy#installation',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://github.com/spotify/annoy#full-documentation',
+    features: ['内存高效', '快速查询', '只读索引', '多语言', '轻量级'],
+    color: 'from-green-400 to-blue-500'
+  },
+
+  // 搜索引擎
+  {
+    id: 'elasticsearch',
+    name: 'Elasticsearch',
+    description: '分布式搜索和分析引擎，支持全文搜索和向量搜索功能',
+    category: '搜索引擎',
+    icon: Database,
+    officialUrl: 'https://www.elastic.co/elasticsearch/',
+    downloadUrl: 'https://www.elastic.co/downloads/elasticsearch',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Freemium',
+    tutorialUrl: 'https://www.elastic.co/guide/en/elasticsearch/reference/current/',
+    features: ['全文搜索', '向量搜索', '分布式', '实时分析', 'RESTful API'],
+    color: 'from-yellow-500 to-orange-600'
   },
 
   // 前端工具
