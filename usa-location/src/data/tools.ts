@@ -1,4 +1,4 @@
-import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield } from 'lucide-react';
+import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download } from 'lucide-react';
 
 export interface Tool {
   id: string;
@@ -23,6 +23,17 @@ export const tools: Tool[] = [
     category: '数据生成',
     features: ['地址生成', '个人信息', '批量导出', '地图定位', '免税州筛选'],
     color: 'from-blue-500 to-purple-600'
+  },
+  {
+    id: 'dev-tools',
+    name: '💻 编程软件下载中心',
+    description: '汇聚常见编程开发工具的官方下载地址和安装教程，从IDE到运行时，从数据库到容器化工具',
+    icon: Download,
+    href: '/tools/dev-tools',
+    status: 'active',
+    category: '开发工具',
+    features: ['官方下载', '安装教程', '多平台支持', '分类筛选', '版本信息'],
+    color: 'from-green-500 to-blue-600'
   },
   {
     id: 'password-generator',
