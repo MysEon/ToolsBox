@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/shared/contexts/ThemeContext";
+import { UserPreferencesProvider } from "@/shared/contexts/UserPreferencesContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,8 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="zh-CN">
       <head>
+        <meta name="theme-color" content="#ffffff" />
         <link
           rel="stylesheet"
           href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -36,9 +39,13 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200`}
       >
-        {children}
+        <ThemeProvider>
+          <UserPreferencesProvider>
+            {children}
+          </UserPreferencesProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

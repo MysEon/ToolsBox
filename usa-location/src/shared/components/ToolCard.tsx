@@ -3,6 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Tool } from '../../data/tools';
+import { FavoriteButton } from './FavoriteButton';
+import { useUserPreferences } from '../contexts/UserPreferencesContext';
 import { ArrowRight, Clock, CheckCircle, Zap } from 'lucide-react';
 
 interface ToolCardProps {
@@ -11,8 +13,16 @@ interface ToolCardProps {
 }
 
 export default function ToolCard({ tool, className = '' }: ToolCardProps) {
-  const StatusIcon = tool.status === 'active' ? CheckCircle : 
+  const { recordToolUsage } = useUserPreferences();
+
+  const StatusIcon = tool.status === 'active' ? CheckCircle :
                     tool.status === 'beta' ? Zap : Clock;
+
+  const handleClick = () => {
+    if (tool.status === 'active') {
+      recordToolUsage(tool.id);
+    }
+  };
   
   const statusColors = {
     active: 'bg-green-100 text-green-800 border-green-200',
@@ -27,29 +37,32 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
   };
 
   const CardContent = () => (
-    <div className={`group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${className}`}>
+    <div className={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${className}`}>
       {/* 渐变背景装饰 */}
       <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${tool.color}`}></div>
       
       {/* 卡片内容 */}
       <div className="p-6">
-        {/* 头部：图标和状态 */}
+        {/* 头部：图标、状态和收藏 */}
         <div className="flex items-start justify-between mb-4">
           <div className={`p-3 rounded-lg bg-gradient-to-r ${tool.color} text-white shadow-lg`}>
             <tool.icon className="h-6 w-6" />
           </div>
-          <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border ${statusColors[tool.status]}`}>
-            <StatusIcon className="h-3 w-3" />
-            <span>{statusTexts[tool.status]}</span>
+          <div className="flex items-center space-x-2">
+            <FavoriteButton toolId={tool.id} size="sm" />
+            <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border ${statusColors[tool.status]}`}>
+              <StatusIcon className="h-3 w-3" />
+              <span>{statusTexts[tool.status]}</span>
+            </div>
           </div>
         </div>
 
         {/* 标题和描述 */}
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {tool.name}
           </h3>
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3">
+          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3">
             {tool.description}
           </p>
         </div>
@@ -102,7 +115,7 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
   // 如果工具可用，包装为链接
   if (tool.status === 'active') {
     return (
-      <Link href={tool.href} className="block">
+      <Link href={tool.href} className="block" onClick={handleClick}>
         <CardContent />
       </Link>
     );

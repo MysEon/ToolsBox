@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  Home, 
-  ArrowLeft, 
-  Menu, 
-  X, 
-  Github, 
-  Twitter, 
+import { ThemeToggle } from '../ThemeToggle';
+import {
+  Home,
+  ArrowLeft,
+  Menu,
+  X,
+  Github,
+  Twitter,
   Mail,
   Wrench
 } from 'lucide-react';
@@ -27,7 +28,7 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
   const isHomePage = pathname === '/';
 
   return (
-    <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 shadow-lg">
+    <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 shadow-lg transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* 左侧：Logo和标题 */}
@@ -87,6 +88,9 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
                 <span>GitHub</span>
               </a>
             </nav>
+
+            {/* 主题切换按钮 */}
+            <ThemeToggle variant="button" size="md" />
 
             {/* 移动端菜单按钮 */}
             <button

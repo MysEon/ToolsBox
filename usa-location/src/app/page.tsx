@@ -5,6 +5,11 @@ import Header from '../shared/components/Layout/Header';
 import ToolCard from '../shared/components/ToolCard';
 import SearchBar from '../shared/components/SearchBar';
 import { NewToolNotification } from '../shared/components/NewToolNotification';
+import { EnhancedSearch } from '../shared/components/EnhancedSearch';
+import { FavoriteToolsList } from '../shared/components/FavoriteButton';
+import { RecentlyUsed, UsageStats } from '../shared/components/RecentlyUsed';
+import { useUserPreferences } from '../shared/contexts/UserPreferencesContext';
+import { useKeyboardShortcuts, createDefaultShortcuts } from '../shared/hooks/useKeyboardShortcuts';
 import { tools, categories } from '../data/tools';
 import { searchTools, getSearchSuggestions } from '../shared/utils/searchUtils';
 import {
@@ -18,11 +23,19 @@ import {
   Github,
   Twitter,
   Mail,
-  Search as SearchIcon
+  Search as SearchIcon,
+  Heart,
+  History
 } from 'lucide-react';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<'all' | 'favorites' | 'recent'>('all');
+
+  const isSearching = searchTerm.trim().length > 0;
+
+  const { recordToolUsage } = useUserPreferences();
 
   // 根据搜索词过滤工具
   const filteredTools = useMemo(() => {
@@ -34,15 +47,40 @@ export default function Home() {
     return getSearchSuggestions(tools, searchTerm);
   }, [searchTerm]);
 
+  // 增强搜索功能
+  const handleEnhancedSearch = (query: string) => {
+    return searchTools(tools, query).map(tool => ({
+      id: tool.id,
+      name: tool.name,
+      description: tool.description,
+      category: tool.category,
+      href: tool.href,
+      icon: tool.icon,
+    }));
+  };
+
+  // 处理工具选择
+  const handleToolSelect = (result: any) => {
+    recordToolUsage(result.id);
+    window.location.href = result.href;
+  };
+
+  // 快捷键设置
+  useKeyboardShortcuts({
+    shortcuts: createDefaultShortcuts({
+      openSearch: () => setIsSearchModalOpen(true),
+      closeModal: () => setIsSearchModalOpen(false),
+    }),
+  });
+
   const activeTools = filteredTools.filter(tool => tool.status === 'active');
   const comingSoonTools = filteredTools.filter(tool => tool.status === 'coming-soon');
 
   // 是否有搜索结果
   const hasSearchResults = filteredTools.length > 0;
-  const isSearching = searchTerm.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200">
       {/* 头部导航 */}
       <Header />
 
@@ -53,38 +91,38 @@ export default function Home() {
           <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
             <Wrench className="h-12 w-12 text-white" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             欢迎使用
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               开发者工具箱
             </span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
             集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
           </p>
 
           {/* 统计信息 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
               <div className="flex items-center justify-center mb-2">
                 <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-                <span className="text-2xl font-bold text-gray-900">{activeTools.length}</span>
+                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{activeTools.length}</span>
               </div>
-              <p className="text-gray-600 text-sm">可用工具</p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">可用工具</p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
               <div className="flex items-center justify-center mb-2">
                 <Clock className="h-6 w-6 text-orange-500 mr-2" />
-                <span className="text-2xl font-bold text-gray-900">{comingSoonTools.length}</span>
+                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{comingSoonTools.length}</span>
               </div>
-              <p className="text-gray-600 text-sm">即将推出</p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">即将推出</p>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
               <div className="flex items-center justify-center mb-2">
                 <Star className="h-6 w-6 text-yellow-500 mr-2" />
-                <span className="text-2xl font-bold text-gray-900">100%</span>
+                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">100%</span>
               </div>
-              <p className="text-gray-600 text-sm">免费使用</p>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">免费使用</p>
             </div>
           </div>
         </div>
@@ -95,17 +133,121 @@ export default function Home() {
             <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-green-500 to-blue-600 rounded-full mb-4">
               <SearchIcon className="h-6 w-6 text-white" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">快速查找工具</h2>
-            <p className="text-gray-600">输入关键词搜索您需要的工具</p>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">快速查找工具</h2>
+            <p className="text-gray-600 dark:text-gray-300">输入关键词搜索您需要的工具，或按 Ctrl+K 快速搜索</p>
           </div>
 
           <SearchBar
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
             suggestions={searchSuggestions}
-            placeholder="搜索工具名称、功能、分类..."
+            placeholder="搜索工具名称、功能、分类... (Ctrl+K)"
           />
         </div>
+
+        {/* 个性化区域 */}
+        {!isSearching && (
+          <div className="mb-8">
+            {/* 区域切换标签 */}
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex bg-white dark:bg-gray-800 rounded-lg p-1 shadow-md">
+                <button
+                  onClick={() => setActiveSection('all')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    activeSection === 'all'
+                      ? 'bg-blue-500 text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                  }`}
+                >
+                  全部工具
+                </button>
+                <button
+                  onClick={() => setActiveSection('favorites')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    activeSection === 'favorites'
+                      ? 'bg-red-500 text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                  }`}
+                >
+                  <Heart className="h-4 w-4" />
+                  <span>收藏工具</span>
+                </button>
+                <button
+                  onClick={() => setActiveSection('recent')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
+                    activeSection === 'recent'
+                      ? 'bg-green-500 text-white'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                  }`}
+                >
+                  <History className="h-4 w-4" />
+                  <span>最近使用</span>
+                </button>
+              </div>
+            </div>
+
+            {/* 收藏工具区域 */}
+            {activeSection === 'favorites' && (
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <div className="p-2 bg-red-100 dark:bg-red-900/20 rounded-lg">
+                      <Heart className="h-6 w-6 text-red-600 dark:text-red-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">收藏的工具</h2>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">您收藏的常用工具</p>
+                    </div>
+                  </div>
+                  <FavoriteToolsList
+                    tools={tools}
+                    onToolClick={(toolId) => {
+                      const tool = tools.find(t => t.id === toolId);
+                      if (tool) {
+                        recordToolUsage(toolId);
+                        window.location.href = tool.href;
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* 最近使用区域 */}
+            {activeSection === 'recent' && (
+              <div className="max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  <div className="lg:col-span-2">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                      <div className="flex items-center space-x-3 mb-6">
+                        <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                          <History className="h-6 w-6 text-green-600 dark:text-green-400" />
+                        </div>
+                        <div>
+                          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">最近使用</h2>
+                          <p className="text-gray-600 dark:text-gray-300 text-sm">您最近使用的工具</p>
+                        </div>
+                      </div>
+                      <RecentlyUsed
+                        tools={tools}
+                        onToolClick={(toolId) => {
+                          const tool = tools.find(t => t.id === toolId);
+                          if (tool) {
+                            recordToolUsage(toolId);
+                            window.location.href = tool.href;
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <UsageStats />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* 搜索结果提示 */}
         {isSearching && (
@@ -130,14 +272,14 @@ export default function Home() {
               <section>
                 <div className="flex items-center mb-6">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <CheckCircle className="h-6 w-6 text-green-600" />
+                    <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                      <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-gray-900">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                         {isSearching ? '搜索结果 - 可用工具' : '可用工具'}
                       </h2>
-                      <p className="text-gray-600">
+                      <p className="text-gray-600 dark:text-gray-300">
                         {isSearching ? `找到 ${activeTools.length} 个可用工具` : '立即使用这些强大的工具'}
                       </p>
                     </div>
@@ -333,6 +475,14 @@ export default function Home() {
 
       {/* 新工具通知 */}
       <NewToolNotification />
+
+      {/* 增强搜索模态框 */}
+      <EnhancedSearch
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        onSearch={handleEnhancedSearch}
+        onSelectResult={handleToolSelect}
+      />
     </div>
   );
 }
