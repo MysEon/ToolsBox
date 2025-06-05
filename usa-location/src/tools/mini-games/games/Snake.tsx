@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, RotateCcw, Home, Settings } from 'lucide-react';
-import { SnakeGameState, SnakePosition, GameStatus } from '../types';
+import { SnakeGameState, SnakePosition } from '../types';
 import { useGameContext } from '../context/GameContext';
 import { snakeUtils, gameUtils } from '../utils/gameUtils';
 
@@ -17,7 +17,7 @@ const CELL_SIZE = CANVAS_SIZE / GRID_SIZE;
 
 export default function Snake({ onBack, onSettings }: SnakeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const gameLoopRef = useRef<number>();
+  const gameLoopRef = useRef<number | undefined>(undefined);
   const lastTimeRef = useRef<number>(0);
   
   const { snakeSettings, snakeStats, updateGameStats } = useGameContext();

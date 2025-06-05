@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Save, RotateCcw, Volume2, VolumeX, Palette, Gamepad2, Zap, Grid3X3 } from 'lucide-react';
+import { X, RotateCcw, Volume2, VolumeX, Palette, Zap, Grid3X3 } from 'lucide-react';
 import { GameType } from '../types';
 import { useGameContext } from '../context/GameContext';
 import {
@@ -9,8 +9,7 @@ import {
   snakeColorThemes,
   tetrisThemes,
   gomokuBoardSizes,
-  gomokuDifficulties,
-  keyOptions
+  gomokuDifficulties
 } from '../data/gameData';
 
 interface GameSettingsProps {
@@ -248,7 +247,7 @@ export default function GameSettings({ game, isOpen, onClose }: GameSettingsProp
           {gomokuDifficulties.map((option) => (
             <button
               key={option.level}
-              onClick={() => updateGomokuSettings({ aiDifficulty: option.level as any })}
+              onClick={() => updateGomokuSettings({ aiDifficulty: option.level as 'easy' | 'medium' | 'hard' })}
               className={`p-3 rounded-lg border text-left transition-colors ${
                 gomokuSettings.aiDifficulty === option.level
                   ? 'border-gray-500 bg-gray-50 text-gray-700'

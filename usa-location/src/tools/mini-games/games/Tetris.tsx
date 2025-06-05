@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, RotateCcw, Home, Settings } from 'lucide-react';
-import { TetrisGameState, TetrisPiece, GameStatus } from '../types';
+import { TetrisGameState, TetrisPiece } from '../types';
 import { useGameContext } from '../context/GameContext';
 import { tetrisUtils, gameUtils } from '../utils/gameUtils';
 import { tetrisShapes, tetrisThemes } from '../data/gameData';
@@ -19,7 +19,7 @@ const CELL_SIZE = 20;
 export default function Tetris({ onBack, onSettings }: TetrisProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const nextCanvasRef = useRef<HTMLCanvasElement>(null);
-  const gameLoopRef = useRef<number>();
+  const gameLoopRef = useRef<number | undefined>(undefined);
   const lastTimeRef = useRef<number>(0);
   
   const { tetrisSettings, tetrisStats, updateGameStats } = useGameContext();

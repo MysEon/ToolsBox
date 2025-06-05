@@ -1,4 +1,4 @@
-import { LucideIcon, Code, Database, Container, GitBranch, Palette, Terminal, Globe, Settings } from 'lucide-react';
+import { LucideIcon, Code, Database, Container, GitBranch, Terminal, Settings } from 'lucide-react';
 
 export interface DevTool {
   id: string;

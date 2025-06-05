@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { RotateCcw, Home, Settings, Undo } from 'lucide-react';
-import { GomokuGameState, GomokuPlayer, GomokuPosition } from '../types';
+import { GomokuGameState } from '../types';
 import { useGameContext } from '../context/GameContext';
 import { gomokuUtils, gameUtils } from '../utils/gameUtils';
 
@@ -45,18 +45,50 @@ export default function Gomoku({ onBack, onSettings }: GomokuProps) {
     setGameStartTime(Date.now());
   }, [gomokuSettings.boardSize, gomokuSettings.playerColor]);
   
+  // AI移动
+  const makeAIMove = useCallback(() => {
+    setIsThinking(true);
+
+    setTimeout(() => {
+      setGameState(prev => {
+        if (prev.status !== 'playing' || prev.winner) return prev;
+
+        const aiPlayer = gomokuSettings.playerColor === 'black' ? 'white' : 'black';
+        const move = gomokuUtils.findBestMove(prev.board, aiPlayer, gomokuSettings.aiDifficulty);
+
+        if (!move) return prev;
+
+        const newBoard = prev.board.map(row => [...row]);
+        newBoard[move.row][move.col] = aiPlayer;
+
+        const winner = gomokuUtils.checkWin(newBoard, move.row, move.col, aiPlayer) ? aiPlayer : null;
+
+        return {
+          ...prev,
+          board: newBoard,
+          currentPlayer: gomokuSettings.playerColor,
+          winner,
+          lastMove: move,
+          moveHistory: [...prev.moveHistory, move],
+          status: winner ? 'game-over' : 'playing'
+        };
+      });
+      setIsThinking(false);
+    }, 500 + Math.random() * 1000); // 模拟AI思考时间
+  }, [gomokuSettings]);
+
   // 开始游戏
   const startGame = useCallback(() => {
     setGameState(prev => ({ ...prev, status: 'playing' }));
     setGameStartTime(Date.now());
-    
+
     // 如果玩家选择白棋，AI先手
     if (gomokuSettings.playerColor === 'white') {
       setTimeout(() => {
         makeAIMove();
       }, 500);
     }
-  }, [gomokuSettings.playerColor]);
+  }, [gomokuSettings.playerColor, makeAIMove]);
   
   // 重新开始游戏
   const restartGame = useCallback(() => {
@@ -72,37 +104,7 @@ export default function Gomoku({ onBack, onSettings }: GomokuProps) {
     initGame();
   }, [gameState, gameTime, gomokuStats, updateGameStats, initGame, gomokuSettings.playerColor]);
   
-  // AI移动
-  const makeAIMove = useCallback(() => {
-    setIsThinking(true);
-    
-    setTimeout(() => {
-      setGameState(prev => {
-        if (prev.status !== 'playing' || prev.winner) return prev;
-        
-        const aiPlayer = gomokuSettings.playerColor === 'black' ? 'white' : 'black';
-        const move = gomokuUtils.findBestMove(prev.board, aiPlayer, gomokuSettings.aiDifficulty);
-        
-        if (!move) return prev;
-        
-        const newBoard = prev.board.map(row => [...row]);
-        newBoard[move.row][move.col] = aiPlayer;
-        
-        const winner = gomokuUtils.checkWin(newBoard, move.row, move.col, aiPlayer) ? aiPlayer : null;
-        
-        return {
-          ...prev,
-          board: newBoard,
-          currentPlayer: gomokuSettings.playerColor,
-          winner,
-          lastMove: move,
-          moveHistory: [...prev.moveHistory, move],
-          status: winner ? 'game-over' : 'playing'
-        };
-      });
-      setIsThinking(false);
-    }, 500 + Math.random() * 1000); // 模拟AI思考时间
-  }, [gomokuSettings]);
+
   
   // 玩家移动
   const makePlayerMove = useCallback((row: number, col: number) => {
