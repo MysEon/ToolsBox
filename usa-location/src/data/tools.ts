@@ -1,4 +1,4 @@
-import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock } from 'lucide-react';
+import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2 } from 'lucide-react';
 
 export interface Tool {
   id: string;
@@ -45,6 +45,17 @@ export const tools: Tool[] = [
     category: '安全工具',
     features: ['主流加密', '古典密码', '双向转换', '密钥管理', '多种算法'],
     color: 'from-red-500 to-pink-600'
+  },
+  {
+    id: 'mini-games',
+    name: '🎮 小游戏合集',
+    description: '经典小游戏合集，包含贪吃蛇、俄罗斯方块、五子棋等热门游戏，支持个性化设置和游戏记录',
+    icon: Gamepad2,
+    href: '/tools/mini-games',
+    status: 'active',
+    category: '娱乐工具',
+    features: ['贪吃蛇', '俄罗斯方块', '五子棋', '个性化设置', '游戏记录'],
+    color: 'from-purple-500 to-pink-600'
   },
   {
     id: 'password-generator',
