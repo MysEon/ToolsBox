@@ -4,6 +4,7 @@ import React, { useState, useMemo } from 'react';
 import Header from '../shared/components/Layout/Header';
 import ToolCard from '../shared/components/ToolCard';
 import SearchBar from '../shared/components/SearchBar';
+import SidebarNewsPanel from '../shared/components/SidebarNewsPanel';
 import { NewToolNotification } from '../shared/components/NewToolNotification';
 import { EnhancedSearch } from '../shared/components/EnhancedSearch';
 import { FavoriteToolsList } from '../shared/components/FavoriteButton';
@@ -84,6 +85,9 @@ export default function Home() {
       {/* 头部导航 */}
       <Header />
 
+      {/* 侧边栏新闻面板 */}
+      <SidebarNewsPanel maxItems={15} />
+
       {/* 主要内容 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 欢迎区域 */}
@@ -144,6 +148,8 @@ export default function Home() {
             placeholder="搜索工具名称、功能、分类... (Ctrl+K)"
           />
         </div>
+
+
 
         {/* 个性化区域 */}
         {!isSearching && (

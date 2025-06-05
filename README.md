@@ -36,6 +36,14 @@ Developed By AI
   - 游戏记录和统计数据本地保存
   - 响应式设计，完美适配各种设备
 
+- **📰 科技新闻专区**: 实时获取Hacker News最新科技资讯
+  - 自动获取Hacker News前30条热门新闻
+  - 智能时间格式化显示（几分钟前、几小时前等）
+  - 响应式网格布局，支持桌面和移动端
+  - 10分钟智能缓存，减少API请求
+  - 一键刷新功能，获取最新资讯
+  - 错误处理和重试机制
+
 ## 🎨 用户体验功能
 
 - **🌙 主题切换**: 支持浅色、深色和跟随系统三种主题模式
@@ -94,6 +102,7 @@ open http://localhost:3001
 - **地图**: React Leaflet
 - **数据生成**: Faker.js
 - **加密库**: crypto-js
+- **RSS解析**: rss-parser
 - **部署**: GitHub Pages + GitHub Actions
 
 ## 📁 项目结构
@@ -111,7 +120,7 @@ ToolsBox/
 │   │   │   ├── crypto-tool/        # 加密解密工具
 │   │   │   └── mini-games/         # 小游戏合集
 │   │   ├── data/                   # 数据配置
-│   │   └── utils/                  # 工具函数
+│   │   └── utils/                  # 工具函数（包含新闻服务）
 │   ├── public/                     # 静态资源
 │   ├── package.json                # 项目依赖
 │   └── next.config.ts              # Next.js配置
