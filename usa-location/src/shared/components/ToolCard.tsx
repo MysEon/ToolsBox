@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Tool } from '../data/tools';
+import { Tool } from '../../data/tools';
 import { ArrowRight, Clock, CheckCircle, Zap } from 'lucide-react';
 
 interface ToolCardProps {

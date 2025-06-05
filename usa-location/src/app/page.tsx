@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import Header from '../components/Layout/Header';
-import ToolCard from '../components/ToolCard';
-import SearchBar from '../components/SearchBar';
-import { NewToolNotification } from '../components/NewToolNotification';
+import Header from '../shared/components/Layout/Header';
+import ToolCard from '../shared/components/ToolCard';
+import SearchBar from '../shared/components/SearchBar';
+import { NewToolNotification } from '../shared/components/NewToolNotification';
 import { tools, categories } from '../data/tools';
-import { searchTools, getSearchSuggestions } from '../utils/searchUtils';
+import { searchTools, getSearchSuggestions } from '../shared/utils/searchUtils';
 import {
   Wrench,
   Sparkles,

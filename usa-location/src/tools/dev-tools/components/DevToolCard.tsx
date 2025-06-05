@@ -1,7 +1,7 @@
 'use client';
 
 import { ExternalLink, Download, BookOpen, Info } from 'lucide-react';
-import { DevTool, getLicenseColor } from '@/data/devTools';
+import { DevTool, getLicenseColor } from '../data/devTools';
 
 interface DevToolCardProps {
   tool: DevTool;

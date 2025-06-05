@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import Header from '../../../components/Layout/Header';
-import GeneratorSettings from '../../../components/GeneratorSettings';
-import GeneratorResults from '../../../components/GeneratorResults';
-import MapComponent from '../../../components/MapComponent';
-import { CompleteProfile } from '../../../utils/addressGenerator';
+import Header from '../../../shared/components/Layout/Header';
+import GeneratorSettings from '../../../tools/usa-identity/components/GeneratorSettings';
+import GeneratorResults from '../../../tools/usa-identity/components/GeneratorResults';
+import MapComponent from '../../../tools/usa-identity/components/MapComponent';
+import { CompleteProfile } from '../../../tools/usa-identity/utils/addressGenerator';
 
 export default function USAIdentityGenerator() {
   const [generatedProfiles, setGeneratedProfiles] = useState<CompleteProfile[]>([]);

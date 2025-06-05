@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { ArrowLeft, Search, Filter, ExternalLink, Download, Star } from 'lucide-react';
 import Link from 'next/link';
-import { devTools, categories, getToolsByCategory, getLicenseColor } from '@/data/devTools';
-import { DevToolCard } from '@/components/DevToolCard';
-import { CategoryFilter } from '@/components/CategoryFilter';
+import { devTools, categories, getToolsByCategory, getLicenseColor } from '@/tools/dev-tools/data/devTools';
+import { DevToolCard } from '@/tools/dev-tools/components/DevToolCard';
+import { CategoryFilter } from '@/tools/dev-tools/components/CategoryFilter';
 
 export default function DevToolsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('全部');

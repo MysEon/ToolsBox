@@ -1,4 +1,4 @@
-import { Tool } from '../data/tools';
+import { Tool } from '../../data/tools';
 
 /**
  * 搜索工具函数
