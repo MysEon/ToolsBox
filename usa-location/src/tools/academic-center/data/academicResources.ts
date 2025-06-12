@@ -307,30 +307,67 @@ export const getResourcesByCategory = (category: string) => {
   return academicResources.filter(resource => resource.category === category);
 };
 
-export const getAccessTypeColor = (accessType: string) => {
+// 自定义资源可选图标
+export const customResourceIcons = [
+  { name: 'Search', icon: Search, label: '搜索' },
+  { name: 'BookOpen', icon: BookOpen, label: '书籍' },
+  { name: 'Database', icon: Database, label: '数据库' },
+  { name: 'FileText', icon: FileText, label: '文档' },
+  { name: 'Globe', icon: Globe, label: '网站' },
+  { name: 'GraduationCap', icon: GraduationCap, label: '学术' },
+  { name: 'Microscope', icon: Microscope, label: '研究' },
+  { name: 'BarChart3', icon: BarChart3, label: '分析' },
+  { name: 'Users', icon: Users, label: '社交' },
+  { name: 'Wrench', icon: Wrench, label: '工具' }
+];
+
+// 自定义资源可选颜色
+export const customResourceColors = [
+  { name: 'blue', value: 'from-blue-500 to-indigo-600', label: '蓝色' },
+  { name: 'green', value: 'from-green-500 to-emerald-600', label: '绿色' },
+  { name: 'purple', value: 'from-purple-500 to-pink-600', label: '紫色' },
+  { name: 'red', value: 'from-red-500 to-pink-600', label: '红色' },
+  { name: 'orange', value: 'from-orange-500 to-red-600', label: '橙色' },
+  { name: 'teal', value: 'from-teal-500 to-cyan-600', label: '青色' },
+  { name: 'indigo', value: 'from-indigo-500 to-purple-600', label: '靛蓝' },
+  { name: 'gray', value: 'from-gray-500 to-slate-600', label: '灰色' }
+];
+
+// 获取图标组件
+export const getIconComponent = (iconName: string): LucideIcon => {
+  const iconMap: { [key: string]: LucideIcon } = {
+    Search, BookOpen, Database, FileText, Globe,
+    GraduationCap, Microscope, BarChart3, Users, Wrench
+  };
+  return iconMap[iconName] || Search;
+};
+
+// 访问类型颜色
+export const getAccessTypeColor = (accessType: string): string => {
   switch (accessType) {
     case 'Free':
-      return 'bg-green-100 text-green-800 border-green-200';
-    case 'Freemium':
-      return 'bg-blue-100 text-blue-800 border-blue-200';
+      return 'text-green-700 bg-green-100 border-green-200';
     case 'Subscription':
-      return 'bg-orange-100 text-orange-800 border-orange-200';
+      return 'text-blue-700 bg-blue-100 border-blue-200';
     case 'Institutional':
-      return 'bg-purple-100 text-purple-800 border-purple-200';
+      return 'text-purple-700 bg-purple-100 border-purple-200';
+    case 'Freemium':
+      return 'text-orange-700 bg-orange-100 border-orange-200';
     default:
-      return 'bg-gray-100 text-gray-800 border-gray-200';
+      return 'text-gray-700 bg-gray-100 border-gray-200';
   }
 };
 
-export const getLanguageColor = (language: string) => {
+// 语言颜色
+export const getLanguageColor = (language: string): string => {
   switch (language) {
     case 'Chinese':
-      return 'bg-red-100 text-red-800';
+      return 'text-red-700 bg-red-100';
     case 'English':
-      return 'bg-blue-100 text-blue-800';
+      return 'text-blue-700 bg-blue-100';
     case 'Multilingual':
-      return 'bg-green-100 text-green-800';
+      return 'text-green-700 bg-green-100';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'text-gray-700 bg-gray-100';
   }
 };

@@ -66,11 +66,21 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
 
   const CardContent = () => (
     <div className={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${className}`}>
-      {/* 渐变背景装饰 */}
-      <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${tool.color}`}></div>
-      
+      {/* 渐变背景装饰 - 加高样式并显示分类信息 */}
+      <div className={`absolute top-0 left-0 w-full h-6 bg-gradient-to-r ${tool.color} flex items-center justify-between px-3`}>
+        {/* 左侧：分类信息 */}
+        <div className="text-white text-xs font-semibold">
+          {tool.category}
+        </div>
+
+        {/* 右侧：状态信息 */}
+        <div className="text-white text-xs font-semibold">
+          {statusTexts[tool.status]}
+        </div>
+      </div>
+
       {/* 卡片内容 */}
-      <div className={getPaddingClasses()}>
+      <div className={`${getPaddingClasses()} pt-8`}>
         {/* 头部：图标、状态和收藏 */}
         <div className={`flex items-start justify-between ${getSpacingClasses()}`}>
           <div className={`p-3 rounded-lg bg-gradient-to-r ${tool.color} text-white shadow-lg`}>
@@ -78,10 +88,6 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
           </div>
           <div className="flex items-center space-x-2">
             <FavoriteButton toolId={tool.id} size="sm" />
-            <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium border ${statusColors[tool.status]}`}>
-              <StatusIcon className="h-3 w-3" />
-              <span>{statusTexts[tool.status]}</span>
-            </div>
           </div>
         </div>
 

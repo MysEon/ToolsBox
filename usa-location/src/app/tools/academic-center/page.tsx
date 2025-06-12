@@ -1,24 +1,76 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { ArrowLeft, GraduationCap, Star, Heart } from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { ArrowLeft, GraduationCap, Star, Heart, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useUserPreferences } from '@/shared/contexts/UserPreferencesContext';
-import { academicResources, categories, getResourcesByCategory } from '@/tools/academic-center/data/academicResources';
+import { academicResources, categories, getResourcesByCategory, AcademicResource } from '@/tools/academic-center/data/academicResources';
 import { AcademicResourceCard } from '@/tools/academic-center/components/AcademicResourceCard';
 import { CategoryFilter } from '@/tools/academic-center/components/CategoryFilter';
 import { SearchBar } from '@/tools/academic-center/components/SearchBar';
+import { AddCustomResourceModal } from '../../../tools/academic-center/components/AddCustomResourceModal';
+import { EditCustomResourceModal } from '../../../tools/academic-center/components/EditCustomResourceModal';
+import { customResourceStorage } from '../../../tools/academic-center/utils/customResourceStorage';
 
 export default function AcademicCenterPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('全部');
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [customResources, setCustomResources] = useState<AcademicResource[]>([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingResourceId, setEditingResourceId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { preferences } = useUserPreferences();
 
+  // 加载自定义资源
+  useEffect(() => {
+    loadCustomResources();
+  }, []);
+
+  const loadCustomResources = async () => {
+    try {
+      const resources = await customResourceStorage.getAllCustomResources();
+      setCustomResources(resources);
+    } catch (error) {
+      console.error('Failed to load custom resources:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 合并预设资源和自定义资源
+  const allResources = useMemo(() => {
+    return [...academicResources, ...customResources];
+  }, [customResources]);
+
+  // 获取所有分类（包括自定义资源的分类）
+  const allCategories = useMemo(() => {
+    const categorySet = new Set([...categories]);
+    customResources.forEach(resource => {
+      categorySet.add(resource.category);
+    });
+    return Array.from(categorySet);
+  }, [customResources]);
+
+  // 处理自定义资源操作
+  const handleAddSuccess = () => {
+    loadCustomResources();
+  };
+
+  const handleEditResource = (resourceId: string) => {
+    setEditingResourceId(resourceId);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSuccess = () => {
+    loadCustomResources();
+  };
+
   // 过滤资源
   const filteredResources = useMemo(() => {
-    let filtered = academicResources;
+    let filtered = allResources;
 
     // 按收藏筛选
     if (showFavoritesOnly) {
@@ -44,7 +96,7 @@ export default function AcademicCenterPage() {
     }
 
     return filtered;
-  }, [searchTerm, selectedCategory, showFavoritesOnly, preferences.favoriteTools]);
+  }, [searchTerm, selectedCategory, showFavoritesOnly, preferences.favoriteTools, allResources]);
 
   // 按分类组织资源
   const resourcesByCategory = useMemo(() => {
@@ -52,8 +104,8 @@ export default function AcademicCenterPage() {
       return { [selectedCategory]: filteredResources };
     }
 
-    const grouped: Record<string, typeof academicResources> = {};
-    categories.forEach(category => {
+    const grouped: Record<string, AcademicResource[]> = {};
+    allCategories.forEach(category => {
       const categoryResources = filteredResources.filter(resource => resource.category === category);
       if (categoryResources.length > 0) {
         grouped[category] = categoryResources;
@@ -82,14 +134,27 @@ export default function AcademicCenterPage() {
                 <p className="text-gray-600 mt-1">汇聚计算机科学领域的权威学术资源和研究工具</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4 text-sm text-gray-500">
-              <div className="flex items-center space-x-1">
-                <Star className="h-4 w-4 text-yellow-500" />
-                <span>共 {academicResources.length} 个资源</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Heart className="h-4 w-4 text-red-500" />
-                <span>已收藏 {preferences.favoriteTools.filter(id => id.startsWith('academic-')).length} 个</span>
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setIsAddModalOpen(true)}
+                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                <Plus className="h-4 w-4" />
+                <span>添加自定义资源</span>
+              </button>
+
+              <div className="flex items-center space-x-4 text-sm text-gray-500">
+                <div className="flex items-center space-x-1">
+                  <Star className="h-4 w-4 text-yellow-500" />
+                  <span>共 {allResources.length} 个资源</span>
+                  {customResources.length > 0 && (
+                    <span className="text-purple-600">({customResources.length} 个自定义)</span>
+                  )}
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Heart className="h-4 w-4 text-red-500" />
+                  <span>已收藏 {preferences.favoriteTools.filter(id => id.startsWith('academic-')).length} 个</span>
+                </div>
               </div>
             </div>
           </div>
@@ -123,7 +188,7 @@ export default function AcademicCenterPage() {
 
           {/* 分类筛选 */}
           <CategoryFilter
-            categories={['全部', ...categories]}
+            categories={['全部', ...allCategories]}
             selectedCategory={selectedCategory}
             onCategoryChange={setSelectedCategory}
           />
@@ -161,7 +226,11 @@ export default function AcademicCenterPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                     {resources.map((resource) => (
-                      <AcademicResourceCard key={resource.id} resource={resource} />
+                      <AcademicResourceCard
+                        key={resource.id}
+                        resource={resource}
+                        onEdit={resource.isCustom ? handleEditResource : undefined}
+                      />
                     ))}
                   </div>
                 </div>
@@ -214,6 +283,23 @@ export default function AcademicCenterPage() {
           </div>
         </div>
       </div>
+
+      {/* 弹窗组件 */}
+      <AddCustomResourceModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSuccess={handleAddSuccess}
+      />
+
+      <EditCustomResourceModal
+        isOpen={isEditModalOpen}
+        resourceId={editingResourceId}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingResourceId(null);
+        }}
+        onSuccess={handleEditSuccess}
+      />
     </div>
   );
 }

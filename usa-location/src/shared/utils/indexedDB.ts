@@ -23,11 +23,12 @@ export interface DatabaseSchema {
   cache: StorageItem;
   identityProfiles: StorageItem;
   identitySettings: StorageItem;
+  customAcademicResources: StorageItem;
 }
 
 class IndexedDBManager {
   private dbName = 'ToolsBoxDB';
-  private version = 1;
+  private version = 2;
   private db: IDBDatabase | null = null;
 
   /**
@@ -78,6 +79,12 @@ class IndexedDBManager {
         if (!db.objectStoreNames.contains('identitySettings')) {
           const settingsStore = db.createObjectStore('identitySettings', { keyPath: 'id' });
           settingsStore.createIndex('timestamp', 'timestamp', { unique: false });
+        }
+
+        if (!db.objectStoreNames.contains('customAcademicResources')) {
+          const customResourcesStore = db.createObjectStore('customAcademicResources', { keyPath: 'id' });
+          customResourcesStore.createIndex('timestamp', 'timestamp', { unique: false });
+          customResourcesStore.createIndex('category', 'data.category', { unique: false });
         }
       };
     });
@@ -411,6 +418,48 @@ export class AdvancedStorage {
   }
 
   /**
+   * 保存自定义学术资源
+   */
+  async saveCustomAcademicResource(resourceId: string, resource: any): Promise<void> {
+    await this.init();
+    await indexedDBManager.set('customAcademicResources', resourceId, resource);
+  }
+
+  /**
+   * 获取所有自定义学术资源
+   */
+  async getAllCustomAcademicResources(): Promise<any[]> {
+    await this.init();
+    return await indexedDBManager.getAll('customAcademicResources');
+  }
+
+  /**
+   * 获取单个自定义学术资源
+   */
+  async getCustomAcademicResource(resourceId: string): Promise<any> {
+    await this.init();
+    const data = await indexedDBManager.get('customAcademicResources', resourceId);
+    // 返回与 getAll 方法一致的格式
+    return data ? { data } : null;
+  }
+
+  /**
+   * 删除自定义学术资源
+   */
+  async deleteCustomAcademicResource(resourceId: string): Promise<void> {
+    await this.init();
+    await indexedDBManager.delete('customAcademicResources', resourceId);
+  }
+
+  /**
+   * 清空所有自定义学术资源
+   */
+  async clearAllCustomAcademicResources(): Promise<void> {
+    await this.init();
+    await indexedDBManager.clear('customAcademicResources');
+  }
+
+  /**
    * 获取存储统计信息
    */
   async getStorageStats(customQuota?: number, useCustomQuota?: boolean): Promise<{
@@ -418,7 +467,7 @@ export class AdvancedStorage {
     localStorage: { usage: number; quota: number; percentage: number };
   }> {
     const indexedDBInfo = await indexedDBManager.getStorageInfo(customQuota, useCustomQuota);
-    
+
     // 计算localStorage使用情况
     let localStorageUsage = 0;
     try {

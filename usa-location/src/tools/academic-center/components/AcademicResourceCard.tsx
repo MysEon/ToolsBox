@@ -1,32 +1,61 @@
 'use client';
 
-import { ExternalLink, Star, Info, Globe } from 'lucide-react';
+import { ExternalLink, Star, Info, Globe, Edit, Sparkles } from 'lucide-react';
 import { AcademicResource, getAccessTypeColor, getLanguageColor } from '../data/academicResources';
 import { FavoriteButton } from '@/shared/components/FavoriteButton';
 
 interface AcademicResourceCardProps {
   resource: AcademicResource;
+  onEdit?: (resourceId: string) => void;
 }
 
-export function AcademicResourceCard({ resource }: AcademicResourceCardProps) {
+export function AcademicResourceCard({ resource, onEdit }: AcademicResourceCardProps) {
   const handleVisit = () => {
     window.open(resource.url, '_blank', 'noopener,noreferrer');
   };
 
   return (
     <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
-      {/* 渐变背景装饰 */}
-      <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${resource.color}`}></div>
-      
+      {/* 渐变背景装饰 - 所有卡片都使用加高样式 */}
+      <div className={`absolute top-0 left-0 w-full h-6 bg-gradient-to-r ${resource.color} flex items-center justify-between px-3`}>
+        {/* 左侧：分类信息 */}
+        <div className="text-white text-xs font-semibold">
+          {resource.category}
+        </div>
+
+        {/* 右侧：自定义标识 */}
+        {resource.isCustom && (
+          <div className="flex items-center space-x-1 text-white text-xs font-semibold">
+            <Sparkles className="h-3 w-3" />
+            <span>自定义</span>
+          </div>
+        )}
+      </div>
+
       {/* 卡片内容 */}
-      <div className="p-4">
+      <div className="p-4 pt-8">
         {/* 头部：图标、访问类型、语言和收藏 */}
         <div className="flex items-start justify-between mb-3">
-          <div className={`p-2 rounded-lg bg-gradient-to-r ${resource.color} text-white shadow-lg`}>
-            <resource.icon className="h-5 w-5" />
+          <div className="flex items-center space-x-2">
+            <div className={`p-2 rounded-lg bg-gradient-to-r ${resource.color} text-white shadow-lg`}>
+              <resource.icon className="h-5 w-5" />
+            </div>
+
           </div>
           <div className="flex flex-col items-end space-y-1">
             <div className="flex items-center space-x-2">
+              {resource.isCustom && onEdit && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(resource.id);
+                  }}
+                  className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
+                  title="编辑资源"
+                >
+                  <Edit className="h-4 w-4" />
+                </button>
+              )}
               <FavoriteButton toolId={`academic-${resource.id}`} variant="star" size="sm" />
               <div className={`flex items-center space-x-1 px-2 py-0.5 rounded-full text-xs font-medium border ${getAccessTypeColor(resource.accessType)}`}>
                 <span>{resource.accessType}</span>
