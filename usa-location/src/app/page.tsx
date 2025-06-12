@@ -3,12 +3,14 @@
 import React, { useState, useMemo } from 'react';
 import Header from '../shared/components/Layout/Header';
 import ToolCard from '../shared/components/ToolCard';
-import SearchBar from '../shared/components/SearchBar';
 import SidebarNewsPanel from '../shared/components/SidebarNewsPanel';
 import { NewToolNotification } from '../shared/components/NewToolNotification';
 import { EnhancedSearch } from '../shared/components/EnhancedSearch';
 import { FavoriteToolsList } from '../shared/components/FavoriteButton';
 import { RecentlyUsed, UsageStats } from '../shared/components/RecentlyUsed';
+import { CollapsiblePanel, StatsCollapsiblePanel, InfoCollapsiblePanel } from '../shared/components/CollapsiblePanel';
+import { LayoutSettings, LayoutSettingsButton } from '../shared/components/LayoutSettings';
+import { StorageManager } from '../shared/components/StorageManager';
 import { useUserPreferences } from '../shared/contexts/UserPreferencesContext';
 import { useKeyboardShortcuts, createDefaultShortcuts } from '../shared/hooks/useKeyboardShortcuts';
 import { tools, categories } from '../data/tools';
@@ -26,17 +28,20 @@ import {
   Mail,
   Search as SearchIcon,
   Heart,
-  History
+  History,
+  Database
 } from 'lucide-react';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<'all' | 'favorites' | 'recent'>('all');
+  const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
+  const [isStorageManagerOpen, setIsStorageManagerOpen] = useState(false);
 
   const isSearching = searchTerm.trim().length > 0;
 
-  const { recordToolUsage } = useUserPreferences();
+  const { preferences, recordToolUsage, updateLayoutSettings } = useUserPreferences();
 
   // 根据搜索词过滤工具
   const filteredTools = useMemo(() => {
@@ -80,16 +85,79 @@ export default function Home() {
   // 是否有搜索结果
   const hasSearchResults = filteredTools.length > 0;
 
+  // 根据布局设置生成网格类名
+  const getGridClasses = () => {
+    const { density, gridColumns } = preferences.layout;
+
+    let baseClasses = 'grid grid-cols-1';
+    let gapClass = '';
+
+    // 根据密度设置间距
+    switch (density) {
+      case 'compact':
+        gapClass = 'gap-3';
+        break;
+      case 'spacious':
+        gapClass = 'gap-8';
+        break;
+      default:
+        gapClass = 'gap-6';
+    }
+
+    // 根据列数设置
+    if (gridColumns === 'auto') {
+      baseClasses += ' md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5';
+    } else {
+      const cols = parseInt(gridColumns);
+      baseClasses += ` md:grid-cols-${Math.min(cols, 2)} lg:grid-cols-${Math.min(cols, 3)} xl:grid-cols-${cols}`;
+    }
+
+    return `${baseClasses} ${gapClass}`;
+  };
+
+  // 根据布局密度获取容器类名
+  const getContainerClasses = () => {
+    const { density } = preferences.layout;
+
+    switch (density) {
+      case 'compact':
+        return 'max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6';
+      case 'spacious':
+        return 'max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-12';
+      default:
+        return 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8';
+    }
+  };
+
+  // 根据布局密度获取间距类名
+  const getSpacingClasses = () => {
+    const { density } = preferences.layout;
+
+    switch (density) {
+      case 'compact':
+        return 'space-y-4';
+      case 'spacious':
+        return 'space-y-12';
+      default:
+        return 'space-y-8';
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200">
       {/* 头部导航 */}
-      <Header />
+      <Header
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchSuggestions={searchSuggestions}
+        onMobileSearchClick={() => setIsSearchModalOpen(true)}
+      />
 
       {/* 侧边栏新闻面板 */}
       <SidebarNewsPanel maxItems={15} />
 
       {/* 主要内容 */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className={getContainerClasses()}>
         {/* 欢迎区域 */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-6">
@@ -106,47 +174,45 @@ export default function Home() {
           </p>
 
           {/* 统计信息 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-              <div className="flex items-center justify-center mb-2">
-                <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{activeTools.length}</span>
+          <div className="max-w-4xl mx-auto">
+            <StatsCollapsiblePanel title="工具统计" defaultExpanded={true}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
+                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{activeTools.length}</span>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">可用工具</p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <Clock className="h-6 w-6 text-orange-500 mr-2" />
+                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{comingSoonTools.length}</span>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">即将推出</p>
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                  <div className="flex items-center justify-center mb-2">
+                    <Star className="h-6 w-6 text-yellow-500 mr-2" />
+                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">100%</span>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">免费使用</p>
+                </div>
               </div>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">可用工具</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-              <div className="flex items-center justify-center mb-2">
-                <Clock className="h-6 w-6 text-orange-500 mr-2" />
-                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{comingSoonTools.length}</span>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">即将推出</p>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-              <div className="flex items-center justify-center mb-2">
-                <Star className="h-6 w-6 text-yellow-500 mr-2" />
-                <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">100%</span>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">免费使用</p>
-            </div>
+            </StatsCollapsiblePanel>
           </div>
         </div>
 
-        {/* 搜索栏 */}
-        <div className="mb-8">
-          <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center p-2 bg-gradient-to-r from-green-500 to-blue-600 rounded-full mb-4">
-              <SearchIcon className="h-6 w-6 text-white" />
-            </div>
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">快速查找工具</h2>
-            <p className="text-gray-600 dark:text-gray-300">输入关键词搜索您需要的工具，或按 Ctrl+K 快速搜索</p>
-          </div>
-
-          <SearchBar
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            suggestions={searchSuggestions}
-            placeholder="搜索工具名称、功能、分类... (Ctrl+K)"
-          />
+        {/* 布局设置和存储管理 */}
+        <div className="flex justify-end space-x-3 mb-6">
+          <button
+            onClick={() => setIsStorageManagerOpen(true)}
+            className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          >
+            <Database className="h-4 w-4" />
+            <span>存储管理</span>
+          </button>
+          <LayoutSettingsButton onClick={() => setIsLayoutSettingsOpen(true)} />
         </div>
 
 
@@ -272,7 +338,7 @@ export default function Home() {
 
         {/* 工具展示区域 */}
         {!isSearching || hasSearchResults ? (
-          <div className="space-y-8">
+          <div className={getSpacingClasses()}>
             {/* 可用工具 */}
             {activeTools.length > 0 && (
               <section>
@@ -292,7 +358,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={getGridClasses()}>
                   {activeTools.map((tool) => (
                     <ToolCard key={tool.id} tool={tool} />
                   ))}
@@ -319,7 +385,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className={getGridClasses()}>
                   {comingSoonTools.map((tool) => (
                     <ToolCard key={tool.id} tool={tool} />
                   ))}
@@ -329,49 +395,48 @@ export default function Home() {
 
             {/* 特色介绍 - 只在非搜索状态或搜索有结果时显示 */}
             {(!isSearching || hasSearchResults) && (
-              <section className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center justify-center p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
-                    <Sparkles className="h-6 w-6 text-white" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3">为什么选择开发者工具箱？</h2>
-                  <p className="text-gray-600 max-w-2xl mx-auto">
+              <InfoCollapsiblePanel
+                title="为什么选择开发者工具箱？"
+                defaultExpanded={false}
+              >
+                <div className="text-center mb-6">
+                  <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                     我们致力于为开发者和创作者提供最优质的工具体验
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center p-3 bg-blue-100 rounded-full mb-3">
-                      <TrendingUp className="h-5 w-5 text-blue-600" />
+                    <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-900/20 rounded-full mb-3">
+                      <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">高效便捷</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">高效便捷</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
                       简洁直观的界面设计，让您快速上手，提升工作效率
                     </p>
                   </div>
 
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center p-3 bg-green-100 rounded-full mb-3">
-                      <Star className="h-5 w-5 text-green-600" />
+                    <div className="inline-flex items-center justify-center p-3 bg-green-100 dark:bg-green-900/20 rounded-full mb-3">
+                      <Star className="h-5 w-5 text-green-600 dark:text-green-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">完全免费</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">完全免费</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
                       所有工具完全免费使用，无需注册，无使用限制
                     </p>
                   </div>
 
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center p-3 bg-purple-100 rounded-full mb-3">
-                      <Users className="h-5 w-5 text-purple-600" />
+                    <div className="inline-flex items-center justify-center p-3 bg-purple-100 dark:bg-purple-900/20 rounded-full mb-3">
+                      <Users className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">持续更新</h3>
-                    <p className="text-gray-600 text-sm">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">持续更新</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
                       根据用户反馈持续优化，定期推出新功能和工具
                     </p>
                   </div>
                 </div>
-              </section>
+              </InfoCollapsiblePanel>
             )}
           </div>
         ) : (
@@ -488,6 +553,22 @@ export default function Home() {
         onClose={() => setIsSearchModalOpen(false)}
         onSearch={handleEnhancedSearch}
         onSelectResult={handleToolSelect}
+      />
+
+      {/* 布局设置模态框 */}
+      <LayoutSettings
+        isOpen={isLayoutSettingsOpen}
+        onClose={() => setIsLayoutSettingsOpen(false)}
+        layoutDensity={preferences.layout.density}
+        gridColumns={preferences.layout.gridColumns}
+        onLayoutDensityChange={(density) => updateLayoutSettings({ density })}
+        onGridColumnsChange={(gridColumns) => updateLayoutSettings({ gridColumns })}
+      />
+
+      {/* 存储管理器 */}
+      <StorageManager
+        isOpen={isStorageManagerOpen}
+        onClose={() => setIsStorageManagerOpen(false)}
       />
     </div>
   );

@@ -91,9 +91,9 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full">
         <div className="bg-orange-500 text-white p-1 rounded-l-md shadow-lg">
           {isExpanded ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
             <ChevronLeft className="h-4 w-4" />
+          ) : (
+            <ChevronRight className="h-4 w-4" />
           )}
         </div>
       </div>

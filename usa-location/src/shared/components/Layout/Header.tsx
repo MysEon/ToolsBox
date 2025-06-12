@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from '../ThemeToggle';
+import HeaderSearchBar, { MobileSearchButton } from '../HeaderSearchBar';
 import {
   Home,
   ArrowLeft,
@@ -19,20 +20,34 @@ interface HeaderProps {
   showBackButton?: boolean;
   title?: string;
   subtitle?: string;
+  // 搜索相关props
+  searchTerm?: string;
+  onSearchChange?: (term: string) => void;
+  searchSuggestions?: string[];
+  onMobileSearchClick?: () => void;
 }
 
-export default function Header({ showBackButton = false, title, subtitle }: HeaderProps) {
+export default function Header({
+  showBackButton = false,
+  title,
+  subtitle,
+  searchTerm = '',
+  onSearchChange,
+  searchSuggestions = [],
+  onMobileSearchClick
+}: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const isHomePage = pathname === '/';
+  const showSearch = isHomePage && onSearchChange;
 
   return (
     <header className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 shadow-lg transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex items-center py-4 gap-4">
           {/* 左侧：Logo和标题 */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             {/* 返回按钮 */}
             {showBackButton && !isHomePage && (
               <Link 
@@ -62,8 +77,21 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
             </Link>
           </div>
 
+          {/* 中间：搜索框 (仅在首页显示) */}
+          {showSearch && (
+            <div className="hidden md:flex flex-1 justify-center max-w-md mx-4">
+              <HeaderSearchBar
+                searchTerm={searchTerm}
+                onSearchChange={onSearchChange}
+                suggestions={searchSuggestions}
+                placeholder="搜索工具..."
+                className="w-full"
+              />
+            </div>
+          )}
+
           {/* 右侧：导航和菜单 */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             {/* 桌面端导航 */}
             <nav className="hidden md:flex items-center space-x-1">
               <Link
@@ -88,6 +116,13 @@ export default function Header({ showBackButton = false, title, subtitle }: Head
                 <span>GitHub</span>
               </a>
             </nav>
+
+            {/* 移动端搜索按钮 (仅在首页显示) */}
+            {showSearch && (
+              <div className="md:hidden">
+                <MobileSearchButton onClick={onMobileSearchClick || (() => {})} />
+              </div>
+            )}
 
             {/* 主题切换按钮 */}
             <ThemeToggle variant="button" size="md" />

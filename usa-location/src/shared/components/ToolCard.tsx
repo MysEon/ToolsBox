@@ -13,7 +13,7 @@ interface ToolCardProps {
 }
 
 export default function ToolCard({ tool, className = '' }: ToolCardProps) {
-  const { recordToolUsage } = useUserPreferences();
+  const { preferences, recordToolUsage } = useUserPreferences();
 
   const StatusIcon = tool.status === 'active' ? CheckCircle :
                     tool.status === 'beta' ? Zap : Clock;
@@ -21,6 +21,34 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
   const handleClick = () => {
     if (tool.status === 'active') {
       recordToolUsage(tool.id);
+    }
+  };
+
+  // 根据布局密度获取内边距
+  const getPaddingClasses = () => {
+    const { density } = preferences.layout;
+
+    switch (density) {
+      case 'compact':
+        return 'p-4';
+      case 'spacious':
+        return 'p-8';
+      default:
+        return 'p-6';
+    }
+  };
+
+  // 根据布局密度获取间距
+  const getSpacingClasses = () => {
+    const { density } = preferences.layout;
+
+    switch (density) {
+      case 'compact':
+        return 'mb-3';
+      case 'spacious':
+        return 'mb-6';
+      default:
+        return 'mb-4';
     }
   };
   
@@ -42,9 +70,9 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
       <div className={`absolute top-0 left-0 w-full h-2 bg-gradient-to-r ${tool.color}`}></div>
       
       {/* 卡片内容 */}
-      <div className="p-6">
+      <div className={getPaddingClasses()}>
         {/* 头部：图标、状态和收藏 */}
-        <div className="flex items-start justify-between mb-4">
+        <div className={`flex items-start justify-between ${getSpacingClasses()}`}>
           <div className={`p-3 rounded-lg bg-gradient-to-r ${tool.color} text-white shadow-lg`}>
             <tool.icon className="h-6 w-6" />
           </div>
@@ -58,7 +86,7 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
         </div>
 
         {/* 标题和描述 */}
-        <div className="mb-4">
+        <div className={getSpacingClasses()}>
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {tool.name}
           </h3>
@@ -68,7 +96,7 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
         </div>
 
         {/* 分类标签 */}
-        <div className="mb-4">
+        <div className={getSpacingClasses()}>
           <span className="inline-block px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-md">
             {tool.category}
           </span>

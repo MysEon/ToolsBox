@@ -185,3 +185,102 @@ footer a:hover {
 .nav-link:hover::before {
   width: 100%;
 }
+
+/* 布局密度相关样式 */
+.layout-compact {
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --padding-sm: 0.75rem;
+  --padding-md: 1rem;
+  --padding-lg: 1.5rem;
+}
+
+.layout-standard {
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --padding-sm: 1rem;
+  --padding-md: 1.5rem;
+  --padding-lg: 2rem;
+}
+
+.layout-spacious {
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --padding-sm: 1.5rem;
+  --padding-md: 2rem;
+  --padding-lg: 3rem;
+}
+
+/* 响应式网格增强 */
+@media (min-width: 1536px) {
+  .grid-cols-auto-2xl {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid-cols-auto-xl {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* 平滑过渡动画 */
+.layout-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+/* 工具卡片悬停增强 */
+.tool-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Header搜索框样式 */
+.header-search-container {
+  position: relative;
+  z-index: 40;
+}
+
+.header-search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.5rem;
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(229, 231, 235, 1);
+  z-index: 50;
+  overflow: hidden;
+}
+
+/* Header响应式搜索框 */
+@media (max-width: 768px) {
+  .header-search-mobile-hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .header-search-desktop-visible {
+    display: flex;
+  }
+}
+
+/* Header搜索框动画 */
+.header-search-input {
+  transition: all 0.3s ease;
+}
+
+.header-search-input:focus {
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(8px);
+}

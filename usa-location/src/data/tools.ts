@@ -1,4 +1,4 @@
-import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2 } from 'lucide-react';
+import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap } from 'lucide-react';
 
 export interface Tool {
   id: string;
@@ -56,6 +56,17 @@ export const tools: Tool[] = [
     category: '娱乐工具',
     features: ['贪吃蛇', '俄罗斯方块', '五子棋', '个性化设置', '游戏记录'],
     color: 'from-purple-500 to-pink-600'
+  },
+  {
+    id: 'academic-center',
+    name: '🎓 学术中心',
+    description: '汇聚计算机科学领域的权威学术资源，包含DBLP、Google Scholar、LetPub等30+学术平台',
+    icon: GraduationCap,
+    href: '/tools/academic-center',
+    status: 'active',
+    category: '学术工具',
+    features: ['文献检索', '期刊评估', '学术社交', '研究工具', '权威资源'],
+    color: 'from-indigo-500 to-purple-600'
   },
   {
     id: 'password-generator',

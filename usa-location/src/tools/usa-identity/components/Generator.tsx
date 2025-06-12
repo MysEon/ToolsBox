@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { US_STATES, getTaxFreeStates, getTaxableStates } from '../data/states';
 import { generateCompleteProfile, generateMultipleProfiles, CompleteProfile } from '../utils/addressGenerator';
 import { exportToJSON, exportToCSV, exportToTXT, copyToClipboard } from '../utils/exportUtils';
-import { Download, Copy, RefreshCw, MapPin, User, CreditCard, Home, DollarSign, ChevronDown, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { identityStorage, IdentitySettings } from '../utils/identityStorage';
+import SavedProfiles from './SavedProfiles';
+import { Download, Copy, RefreshCw, MapPin, User, CreditCard, Home, DollarSign, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Save, History } from 'lucide-react';
 
 interface GeneratorProps {
   onProfilesGenerated?: (profiles: CompleteProfile[]) => void;
@@ -21,6 +23,51 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
   const [generatedProfiles, setGeneratedProfiles] = useState<CompleteProfile[]>([]);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
+  const [autoSave, setAutoSave] = useState<boolean>(false);
+  const [saveMessage, setSaveMessage] = useState<string>('');
+  const [showSavedProfiles, setShowSavedProfiles] = useState<boolean>(false);
+
+  // 加载保存的设置
+  useEffect(() => {
+    const loadSettings = async () => {
+      try {
+        const settings = await identityStorage.getSettings();
+        setSelectedState(settings.selectedState);
+        setSelectedCity(settings.selectedCity);
+        setTaxFilter(settings.taxFilter);
+        setBatchCount(settings.batchCount);
+        setAutoSave(settings.autoSave);
+      } catch (error) {
+        console.warn('Failed to load identity settings:', error);
+      }
+    };
+
+    loadSettings();
+  }, []);
+
+  // 保存设置
+  const saveSettings = async () => {
+    try {
+      await identityStorage.saveSettings({
+        selectedState,
+        selectedCity,
+        taxFilter,
+        batchCount,
+        autoSave,
+      });
+    } catch (error) {
+      console.warn('Failed to save identity settings:', error);
+    }
+  };
+
+  // 当设置改变时自动保存
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      saveSettings();
+    }, 1000); // 1秒后保存
+
+    return () => clearTimeout(timeoutId);
+  }, [selectedState, selectedCity, taxFilter, batchCount, autoSave]);
 
   // 分页状态
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -111,6 +158,19 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
       );
       setGeneratedProfiles(profiles);
 
+      // 自动保存功能
+      if (autoSave && profiles.length > 0) {
+        try {
+          await identityStorage.saveProfiles(profiles);
+          setSaveMessage(`已自动保存 ${profiles.length} 个档案`);
+          setTimeout(() => setSaveMessage(''), 3000);
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+          setSaveMessage('自动保存失败');
+          setTimeout(() => setSaveMessage(''), 3000);
+        }
+      }
+
       // 调用回调函数传递数据给父组件
       if (onProfilesGenerated) {
         onProfilesGenerated(profiles);
@@ -132,6 +192,23 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
     } catch (error) {
       console.error('复制失败:', error);
       alert('复制失败，请重试');
+    }
+  };
+
+  // 手动保存档案
+  const handleSaveProfiles = async () => {
+    if (generatedProfiles.length === 0) {
+      alert('没有可保存的档案');
+      return;
+    }
+
+    try {
+      await identityStorage.saveProfiles(generatedProfiles);
+      setSaveMessage(`已保存 ${generatedProfiles.length} 个档案`);
+      setTimeout(() => setSaveMessage(''), 3000);
+    } catch (error) {
+      console.error('Save failed:', error);
+      alert('保存失败，请重试');
     }
   };
 
@@ -182,9 +259,18 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* 标题 */}
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          🇺🇸 美国虚拟身份生成器
-        </h1>
+        <div className="flex items-center justify-center space-x-4 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900">
+            🇺🇸 美国虚拟身份生成器
+          </h1>
+          <button
+            onClick={() => setShowSavedProfiles(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+          >
+            <History className="h-4 w-4 mr-2" />
+            查看历史
+          </button>
+        </div>
         <p className="text-lg text-gray-600">
           一键生成真实格式的美国地址和完整个人信息，支持按州/城市筛选
         </p>
@@ -326,6 +412,37 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
           </div>
         </div>
 
+        {/* 自动保存设置 */}
+        <div className="border-t pt-4 mb-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={autoSave}
+                  onChange={(e) => setAutoSave(e.target.checked)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm font-medium text-gray-700">自动保存生成的档案</span>
+              </label>
+              {saveMessage && (
+                <span className="text-sm text-green-600 bg-green-50 px-2 py-1 rounded">
+                  {saveMessage}
+                </span>
+              )}
+            </div>
+            {generatedProfiles.length > 0 && (
+              <button
+                onClick={handleSaveProfiles}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md flex items-center transition-colors text-sm"
+              >
+                <Save className="mr-2 h-4 w-4" />
+                手动保存
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* 导出按钮 */}
         {generatedProfiles.length > 0 && (
           <div className="border-t pt-4">
@@ -355,8 +472,8 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
               <button
                 onClick={handleCopy}
                 className={`px-4 py-2 rounded-md flex items-center transition-colors ${
-                  copySuccess 
-                    ? 'bg-green-600 text-white' 
+                  copySuccess
+                    ? 'bg-green-600 text-white'
                     : 'bg-gray-600 hover:bg-gray-700 text-white'
                 }`}
               >
@@ -589,6 +706,12 @@ export default function Generator({ onProfilesGenerated }: GeneratorProps = {}) 
           )}
         </div>
       )}
+
+      {/* 保存的档案弹窗 */}
+      <SavedProfiles
+        isOpen={showSavedProfiles}
+        onClose={() => setShowSavedProfiles(false)}
+      />
     </div>
   );
 }
