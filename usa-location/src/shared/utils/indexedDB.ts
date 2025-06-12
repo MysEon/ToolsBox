@@ -328,7 +328,7 @@ export class AdvancedStorage {
   async getAllBackups(): Promise<any[]> {
     await this.init();
     const backups = await indexedDBManager.getAll('backups');
-    return backups.map(item => item.data).sort((a, b) => 
+    return backups.map(item => item.data).sort((a: any, b: any) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
@@ -370,7 +370,11 @@ export class AdvancedStorage {
   async getAllIdentityProfiles(): Promise<any[]> {
     await this.init();
     const profiles = await indexedDBManager.getAll('identityProfiles');
-    return profiles.map(item => ({ ...item.data, id: item.id, timestamp: item.timestamp }))
+    return profiles.map(item => ({
+      ...(typeof item.data === 'object' && item.data !== null ? item.data : {}),
+      id: item.id,
+      timestamp: item.timestamp
+    }))
       .sort((a, b) => b.timestamp - a.timestamp);
   }
 

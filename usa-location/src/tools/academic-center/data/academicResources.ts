@@ -12,6 +12,8 @@ export interface AcademicResource {
   color: string;
   tags: string[];
   language: 'Chinese' | 'English' | 'Multilingual';
+  isCustom?: boolean;
+  createdAt?: number;
 }
 
 export const academicResources: AcademicResource[] = [

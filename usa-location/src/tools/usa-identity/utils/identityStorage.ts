@@ -233,9 +233,9 @@ export class IdentityStorageManager {
         // CSV 格式
         const headers = [
           'ID', 'Name', 'Email', 'Phone', 'Address', 'City', 'State', 'ZIP',
-          'SSN', 'Credit Card', 'Bank Account', 'Timestamp', 'Tags', 'Notes'
+          'SSN', 'Credit Card', 'Credit Card Type', 'Timestamp', 'Tags', 'Notes'
         ];
-        
+
         const rows = profiles.map(profile => [
           profile.id,
           profile.personal.fullName,
@@ -246,8 +246,8 @@ export class IdentityStorageManager {
           profile.address.state,
           profile.address.zipCode,
           profile.personal.ssn,
-          profile.financial.creditCard.number,
-          profile.financial.bankAccount.accountNumber,
+          profile.personal.creditCard.number,
+          profile.personal.creditCard.type,
           new Date(profile.timestamp).toISOString(),
           (profile.tags || []).join(';'),
           profile.notes || ''

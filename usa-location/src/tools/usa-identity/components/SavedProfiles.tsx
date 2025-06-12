@@ -328,12 +328,10 @@ export default function SavedProfiles({ isOpen, onClose }: SavedProfilesProps) {
                             <div>
                               <h4 className="font-medium text-gray-900 mb-2">金融信息</h4>
                               <div className="space-y-1 text-sm text-gray-600">
-                                <p>信用卡: {maskSensitiveData(profile.financial.creditCard.number)}</p>
-                                <p>卡类型: {profile.financial.creditCard.type}</p>
-                                <p>到期: {profile.financial.creditCard.expirationDate}</p>
-                                <p>CVV: {maskSensitiveData(profile.financial.creditCard.cvv)}</p>
-                                <p>银行账户: {maskSensitiveData(profile.financial.bankAccount.accountNumber)}</p>
-                                <p>路由号: {maskSensitiveData(profile.financial.bankAccount.routingNumber)}</p>
+                                <p>信用卡: {maskSensitiveData(profile.personal.creditCard.number)}</p>
+                                <p>卡类型: {profile.personal.creditCard.type}</p>
+                                <p>到期: {profile.personal.creditCard.expirationDate}</p>
+                                <p>CVV: {maskSensitiveData(profile.personal.creditCard.cvv)}</p>
                               </div>
                             </div>
                           </div>
