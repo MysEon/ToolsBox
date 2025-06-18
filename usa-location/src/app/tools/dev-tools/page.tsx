@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Search, Filter, ExternalLink, Download, Star } from 'lucide-react';
+import { ArrowLeft, Search, Filter, ExternalLink, Download, Star, Container } from 'lucide-react';
 import Link from 'next/link';
 import { devTools, categories, getToolsByCategory, getLicenseColor } from '@/tools/dev-tools/data/devTools';
 import { DevToolCard } from '@/tools/dev-tools/components/DevToolCard';
 import { CategoryFilter } from '@/tools/dev-tools/components/CategoryFilter';
+import { DockerCenter } from '@/tools/dev-tools/components/DockerCenter';
 
 export default function DevToolsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('全部');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showDockerCenter, setShowDockerCenter] = useState(false);
 
   const filteredTools = devTools.filter(tool => {
     const matchesCategory = selectedCategory === '全部' || tool.category === selectedCategory;
@@ -27,6 +29,11 @@ export default function DevToolsPage() {
         return acc;
       }, {} as Record<string, typeof devTools>)
     : { [selectedCategory]: filteredTools };
+
+  // 如果显示Docker中心，渲染Docker中心组件
+  if (showDockerCenter) {
+    return <DockerCenter onBack={() => setShowDockerCenter(false)} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -57,6 +64,32 @@ export default function DevToolsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Docker中心入口 */}
+        <div className="mb-8">
+          <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-xl p-4 md:p-6 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0">
+              <div className="flex items-center space-x-3 md:space-x-4">
+                <div className="bg-white bg-opacity-20 rounded-lg p-2 md:p-3">
+                  <Container className="h-6 w-6 md:h-8 md:w-8" />
+                </div>
+                <div>
+                  <h3 className="text-lg md:text-xl font-bold">🐳 Docker中心</h3>
+                  <p className="text-blue-100 mt-1 text-sm md:text-base">
+                    <span className="hidden sm:inline">镜像站监控 • 容器管理 • 配置助手 • 工具下载</span>
+                    <span className="sm:hidden">容器化开发一站式平台</span>
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowDockerCenter(true)}
+                className="w-full sm:w-auto bg-white text-blue-600 px-4 md:px-6 py-2 md:py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors text-sm md:text-base"
+              >
+                进入Docker中心
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* 搜索和筛选 */}
         <div className="mb-8 space-y-4">
           {/* 搜索框 */}

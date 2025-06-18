@@ -153,6 +153,62 @@ export const devTools: DevTool[] = [
     features: ['容器管理', '镜像构建', 'Kubernetes集成', '开发环境', '微服务支持'],
     color: 'from-blue-500 to-cyan-600'
   },
+  {
+    id: 'docker-compose',
+    name: 'Docker Compose',
+    description: '定义和运行多容器Docker应用的工具',
+    category: '容器化工具',
+    icon: Container,
+    officialUrl: 'https://docs.docker.com/compose/',
+    downloadUrl: 'https://docs.docker.com/compose/install/',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://docs.docker.com/compose/gettingstarted/',
+    features: ['多容器编排', 'YAML配置', '服务依赖', '网络管理'],
+    color: 'from-green-500 to-blue-500'
+  },
+  {
+    id: 'kubernetes',
+    name: 'Kubernetes',
+    description: '容器编排和管理平台',
+    category: '容器化工具',
+    icon: Container,
+    officialUrl: 'https://kubernetes.io/',
+    downloadUrl: 'https://kubernetes.io/docs/setup/',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://kubernetes.io/docs/tutorials/',
+    features: ['自动扩缩容', '服务发现', '负载均衡', '滚动更新'],
+    color: 'from-blue-600 to-purple-600'
+  },
+  {
+    id: 'portainer',
+    name: 'Portainer',
+    description: '轻量级Docker管理界面',
+    category: '容器化工具',
+    icon: Container,
+    officialUrl: 'https://www.portainer.io/',
+    downloadUrl: 'https://docs.portainer.io/start/install-ce',
+    platforms: ['Windows', 'macOS', 'Linux'],
+    license: 'Freemium',
+    tutorialUrl: 'https://docs.portainer.io/',
+    features: ['Web界面', '容器管理', '镜像管理', '用户权限'],
+    color: 'from-indigo-500 to-blue-600'
+  },
+  {
+    id: 'harbor',
+    name: 'Harbor',
+    description: '企业级Docker镜像仓库',
+    category: '容器化工具',
+    icon: Container,
+    officialUrl: 'https://goharbor.io/',
+    downloadUrl: 'https://github.com/goharbor/harbor/releases',
+    platforms: ['Linux'],
+    license: 'Open Source',
+    tutorialUrl: 'https://goharbor.io/docs/',
+    features: ['镜像扫描', '访问控制', '审计日志', '复制同步'],
+    color: 'from-teal-500 to-green-600'
+  },
 
   // 版本控制
   {
