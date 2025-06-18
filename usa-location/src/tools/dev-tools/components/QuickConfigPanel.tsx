@@ -10,25 +10,40 @@ interface QuickConfigPanelProps {
 }
 
 export function QuickConfigPanel({ className = '' }: QuickConfigPanelProps) {
-  const [selectedMirror, setSelectedMirror] = useState<DockerMirror>(dockerMirrors[1]); // 默认选择阿里云
+  // 创建默认镜像源
+  const defaultMirror: DockerMirror = {
+    id: 'custom',
+    name: '自定义镜像源',
+    url: 'https://your-mirror-url.com',
+    description: '请输入您的镜像源地址',
+    location: '自定义',
+    provider: '用户自定义',
+    status: 'unknown',
+    features: ['自定义配置'],
+    color: 'from-gray-500 to-gray-600'
+  };
+
+  const [selectedMirror, setSelectedMirror] = useState<DockerMirror>(defaultMirror);
+  const [customMirrorUrl, setCustomMirrorUrl] = useState<string>('');
   const [selectedPlatform, setSelectedPlatform] = useState<'windows' | 'macos' | 'linux'>('linux');
   const [copiedConfig, setCopiedConfig] = useState<string | null>(null);
 
   // 生成配置内容
   const generateConfig = (template: QuickConfigTemplate): string => {
     let config = template.template;
-    
+
     // 替换变量
     template.variables.forEach(variable => {
       switch (variable) {
         case 'MIRROR_URL':
-          config = config.replace(`{{${variable}}}`, selectedMirror.url);
+          const mirrorUrl = customMirrorUrl || selectedMirror.url;
+          config = config.replace(`{{${variable}}}`, mirrorUrl);
           break;
         default:
           config = config.replace(`{{${variable}}}`, '');
       }
     });
-    
+
     return config;
   };
 
@@ -89,36 +104,51 @@ export function QuickConfigPanel({ className = '' }: QuickConfigPanelProps) {
       </div>
 
       <div className="p-6 space-y-6">
-        {/* 镜像源选择 */}
+        {/* 镜像源配置 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">
-            选择镜像源
+            镜像源地址
           </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {dockerMirrors.map((mirror) => (
-              <button
-                key={mirror.id}
-                onClick={() => setSelectedMirror(mirror)}
-                className={`p-3 border-2 rounded-lg text-left transition-all duration-200 ${
-                  selectedMirror.id === mirror.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-gray-900">{mirror.name}</h4>
-                  {selectedMirror.id === mirror.id && (
-                    <CheckCircle className="h-4 w-4 text-blue-600" />
-                  )}
+          <div className="space-y-3">
+            <input
+              type="url"
+              value={customMirrorUrl}
+              onChange={(e) => setCustomMirrorUrl(e.target.value)}
+              placeholder="请输入镜像源地址，例如: https://docker.mirrors.ustc.edu.cn"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            />
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <h5 className="font-medium text-blue-800 mb-2">常用镜像源推荐:</h5>
+              <div className="space-y-1 text-sm text-blue-700">
+                <div className="flex items-center justify-between">
+                  <span>• 中科大镜像站: https://docker.mirrors.ustc.edu.cn</span>
+                  <button
+                    onClick={() => setCustomMirrorUrl('https://docker.mirrors.ustc.edu.cn')}
+                    className="text-blue-600 hover:text-blue-800 text-xs underline"
+                  >
+                    使用
+                  </button>
                 </div>
-                <p className="text-sm text-gray-600">{mirror.description}</p>
-                <div className="mt-2 flex items-center space-x-2">
-                  <span className="text-xs text-gray-500">{mirror.location}</span>
-                  <span className="text-xs text-gray-400">•</span>
-                  <span className="text-xs text-gray-500">{mirror.provider}</span>
+                <div className="flex items-center justify-between">
+                  <span>• 网易云镜像: https://hub-mirror.c.163.com</span>
+                  <button
+                    onClick={() => setCustomMirrorUrl('https://hub-mirror.c.163.com')}
+                    className="text-blue-600 hover:text-blue-800 text-xs underline"
+                  >
+                    使用
+                  </button>
                 </div>
-              </button>
-            ))}
+                <div className="flex items-center justify-between">
+                  <span>• DaoCloud镜像: https://hub.daocloud.io</span>
+                  <button
+                    onClick={() => setCustomMirrorUrl('https://hub.daocloud.io')}
+                    className="text-blue-600 hover:text-blue-800 text-xs underline"
+                  >
+                    使用
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -146,7 +176,7 @@ export function QuickConfigPanel({ className = '' }: QuickConfigPanelProps) {
         </div>
 
         {/* 配置生成 */}
-        {currentTemplate && (
+        {currentTemplate && customMirrorUrl && (
           <div>
             <div className="flex items-center justify-between mb-3">
               <label className="block text-sm font-medium text-gray-700">

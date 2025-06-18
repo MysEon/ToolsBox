@@ -1,75 +1,8 @@
 import { DockerMirror, DockerTool, QuickConfigTemplate } from '../types/dockerCenter';
 import { Container, Server, Shield, Monitor, Package, Wrench } from 'lucide-react';
 
-// Docker镜像站数据
-export const dockerMirrors: DockerMirror[] = [
-  {
-    id: 'docker-hub',
-    name: 'Docker Hub (官方)',
-    url: 'https://hub.docker.com',
-    description: 'Docker官方镜像仓库',
-    location: '全球',
-    provider: 'Docker Inc.',
-    status: 'unknown',
-    features: ['官方镜像', '社区镜像', '私有仓库'],
-    color: 'from-blue-500 to-blue-600'
-  },
-  {
-    id: 'aliyun',
-    name: '阿里云镜像站',
-    url: 'https://cr.console.aliyun.com',
-    description: '阿里云容器镜像服务',
-    location: '中国',
-    provider: '阿里云',
-    status: 'unknown',
-    features: ['国内加速', '企业级', '安全扫描'],
-    color: 'from-orange-500 to-red-500'
-  },
-  {
-    id: 'tencent',
-    name: '腾讯云镜像站',
-    url: 'https://cloud.tencent.com/product/tcr',
-    description: '腾讯云容器镜像服务',
-    location: '中国',
-    provider: '腾讯云',
-    status: 'unknown',
-    features: ['国内加速', '多地域', '版本管理'],
-    color: 'from-blue-600 to-indigo-600'
-  },
-  {
-    id: 'ustc',
-    name: '中科大镜像站',
-    url: 'https://docker.mirrors.ustc.edu.cn',
-    description: '中国科学技术大学开源软件镜像',
-    location: '中国',
-    provider: '中科大',
-    status: 'unknown',
-    features: ['教育网', '免费', '高速'],
-    color: 'from-green-500 to-green-600'
-  },
-  {
-    id: 'netease',
-    name: '网易云镜像站',
-    url: 'https://hub-mirror.c.163.com',
-    description: '网易云Docker镜像加速服务',
-    location: '中国',
-    provider: '网易云',
-    status: 'unknown',
-    features: ['免费加速', '稳定可靠', '简单配置'],
-    color: 'from-red-500 to-pink-500'
-  },
-  {
-    id: 'daocloud',
-    name: 'DaoCloud镜像站',
-    url: 'https://hub.daocloud.io',
-    description: 'DaoCloud提供的Docker镜像加速服务',
-    location: '中国',
-    provider: 'DaoCloud',
-    status: 'unknown',
-    features: ['企业级', '高可用', '监控告警'],
-    color: 'from-purple-500 to-indigo-500'
-  }
-];
+// Docker镜像站数据 - 仅保留必要的监控
+export const dockerMirrors: DockerMirror[] = [];
 
 // Docker相关工具数据
 export const dockerTools: DockerTool[] = [

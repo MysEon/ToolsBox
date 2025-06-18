@@ -8,7 +8,7 @@ const STORAGE_KEYS = {
 
 // 默认配置
 const DEFAULT_CONFIG: DockerCenterConfig = {
-  enableMirrorMonitoring: true,
+  enableMirrorMonitoring: false, // 禁用镜像监控，只使用第三方服务
   enableContainerMonitoring: true,
   checkInterval: 5, // 5分钟
   timeout: 10, // 10秒

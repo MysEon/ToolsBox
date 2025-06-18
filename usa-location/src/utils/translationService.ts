@@ -224,10 +224,13 @@ class TranslationService {
    */
   private loadCacheFromStorage(): void {
     try {
-      const cached = localStorage.getItem(this.CACHE_KEY);
-      if (cached) {
-        const data = JSON.parse(cached);
-        this.cache = new Map(data);
+      // 检查是否在浏览器环境
+      if (typeof window !== 'undefined' && window.localStorage) {
+        const cached = localStorage.getItem(this.CACHE_KEY);
+        if (cached) {
+          const data = JSON.parse(cached);
+          this.cache = new Map(data);
+        }
       }
     } catch (error) {
       console.warn('Failed to load translation cache:', error);
