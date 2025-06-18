@@ -101,7 +101,7 @@ class NewsService {
           day: 'numeric'
         });
       }
-    } catch (error) {
+    } catch {
       return '时间未知';
     }
   }

@@ -36,6 +36,7 @@ export const SUPPORTED_LANGUAGES = {
 } as const;
 
 export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
+export type SourceLanguage = SupportedLanguage | 'auto';
 
 class TranslationService {
   private cache: Map<string, CachedTranslation> = new Map();
@@ -53,7 +54,7 @@ class TranslationService {
     text: string,
     targetLang: SupportedLanguage,
     apiKey: string,
-    sourceLang: SupportedLanguage = 'auto' as SupportedLanguage,
+    sourceLang: SourceLanguage = 'auto',
     enableCache: boolean = true,
     cacheExpiry: number = 24
   ): Promise<TranslationResponse> {
@@ -77,7 +78,7 @@ class TranslationService {
 
     // 检查缓存
     if (enableCache) {
-      const cached = this.getCachedTranslation(text, sourceLang, targetLang, cacheExpiry);
+      const cached = sourceLang !== 'auto' ? this.getCachedTranslation(text, sourceLang, targetLang, cacheExpiry) : null;
       if (cached) {
         return {
           translatedText: cached.translatedText,
@@ -119,7 +120,7 @@ class TranslationService {
    */
   private async callDeepLXAPI(
     text: string,
-    sourceLang: SupportedLanguage,
+    sourceLang: SourceLanguage,
     targetLang: SupportedLanguage,
     apiKey: string
   ): Promise<TranslationResponse> {
