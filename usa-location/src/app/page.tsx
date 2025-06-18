@@ -11,6 +11,7 @@ import { RecentlyUsed, UsageStats } from '../shared/components/RecentlyUsed';
 import { CollapsiblePanel, StatsCollapsiblePanel, InfoCollapsiblePanel } from '../shared/components/CollapsiblePanel';
 import { LayoutSettings, LayoutSettingsButton } from '../shared/components/LayoutSettings';
 import { StorageManager } from '../shared/components/StorageManager';
+import TranslationSettings from '../shared/components/TranslationSettings';
 import { useUserPreferences } from '../shared/contexts/UserPreferencesContext';
 import { useKeyboardShortcuts, createDefaultShortcuts } from '../shared/hooks/useKeyboardShortcuts';
 import { tools, categories } from '../data/tools';
@@ -29,7 +30,8 @@ import {
   Search as SearchIcon,
   Heart,
   History,
-  Database
+  Database,
+  Languages
 } from 'lucide-react';
 
 export default function Home() {
@@ -38,6 +40,7 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState<'all' | 'favorites' | 'recent'>('all');
   const [isLayoutSettingsOpen, setIsLayoutSettingsOpen] = useState(false);
   const [isStorageManagerOpen, setIsStorageManagerOpen] = useState(false);
+  const [isTranslationSettingsOpen, setIsTranslationSettingsOpen] = useState(false);
 
   const isSearching = searchTerm.trim().length > 0;
 
@@ -172,39 +175,17 @@ export default function Home() {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
             集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
           </p>
-
-          {/* 统计信息 */}
-          <div className="max-w-4xl mx-auto">
-            <StatsCollapsiblePanel title="工具统计" defaultExpanded={true}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{activeTools.length}</span>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">可用工具</p>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Clock className="h-6 w-6 text-orange-500 mr-2" />
-                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">{comingSoonTools.length}</span>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">即将推出</p>
-                </div>
-                <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                  <div className="flex items-center justify-center mb-2">
-                    <Star className="h-6 w-6 text-yellow-500 mr-2" />
-                    <span className="text-2xl font-bold text-gray-900 dark:text-gray-100">100%</span>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm">免费使用</p>
-                </div>
-              </div>
-            </StatsCollapsiblePanel>
-          </div>
         </div>
 
         {/* 布局设置和存储管理 */}
         <div className="flex justify-end space-x-3 mb-6">
+          <button
+            onClick={() => setIsTranslationSettingsOpen(true)}
+            className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          >
+            <Languages className="h-4 w-4" />
+            <span>翻译设置</span>
+          </button>
           <button
             onClick={() => setIsStorageManagerOpen(true)}
             className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
@@ -288,33 +269,26 @@ export default function Home() {
             {/* 最近使用区域 */}
             {activeSection === 'recent' && (
               <div className="max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  <div className="lg:col-span-2">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                      <div className="flex items-center space-x-3 mb-6">
-                        <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                          <History className="h-6 w-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <div>
-                          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">最近使用</h2>
-                          <p className="text-gray-600 dark:text-gray-300 text-sm">您最近使用的工具</p>
-                        </div>
-                      </div>
-                      <RecentlyUsed
-                        tools={tools}
-                        onToolClick={(toolId) => {
-                          const tool = tools.find(t => t.id === toolId);
-                          if (tool) {
-                            recordToolUsage(toolId);
-                            window.location.href = tool.href;
-                          }
-                        }}
-                      />
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+                  <div className="flex items-center space-x-3 mb-6">
+                    <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                      <History className="h-6 w-6 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">最近使用</h2>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">您最近使用的工具</p>
                     </div>
                   </div>
-                  <div>
-                    <UsageStats />
-                  </div>
+                  <RecentlyUsed
+                    tools={tools}
+                    onToolClick={(toolId) => {
+                      const tool = tools.find(t => t.id === toolId);
+                      if (tool) {
+                        recordToolUsage(toolId);
+                        window.location.href = tool.href;
+                      }
+                    }}
+                  />
                 </div>
               </div>
             )}
@@ -437,6 +411,19 @@ export default function Home() {
                   </div>
                 </div>
               </InfoCollapsiblePanel>
+            )}
+
+            {/* 使用统计 - 边缘化显示 */}
+            {(!isSearching || hasSearchResults) && (
+              <div className="mt-8">
+                <StatsCollapsiblePanel
+                  title="使用统计"
+                  defaultExpanded={false}
+                  className="max-w-md mx-auto"
+                >
+                  <UsageStats />
+                </StatsCollapsiblePanel>
+              </div>
             )}
           </div>
         ) : (
@@ -569,6 +556,12 @@ export default function Home() {
       <StorageManager
         isOpen={isStorageManagerOpen}
         onClose={() => setIsStorageManagerOpen(false)}
+      />
+
+      {/* 翻译设置 */}
+      <TranslationSettings
+        isOpen={isTranslationSettingsOpen}
+        onClose={() => setIsTranslationSettingsOpen(false)}
       />
     </div>
   );

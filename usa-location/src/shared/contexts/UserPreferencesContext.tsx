@@ -34,6 +34,14 @@ export interface UserPreferences {
     warningThreshold: number; // 警告阈值，百分比 (0-100)
     lastWarningTime: number; // 上次警告时间戳
   };
+  translation: {
+    deeplxApiKey: string; // DeepLX API Key
+    targetLanguage: string; // 目标翻译语言
+    enableCache: boolean; // 是否启用翻译缓存
+    cacheExpiry: number; // 缓存过期时间（小时）
+    autoTranslate: boolean; // 是否自动翻译
+    showOriginal: boolean; // 是否同时显示原文
+  };
 }
 
 interface UserPreferencesContextType {
@@ -48,6 +56,7 @@ interface UserPreferencesContextType {
   updateSettings: (settings: Partial<UserPreferences['settings']>) => void;
   updateLayoutSettings: (layout: Partial<UserPreferences['layout']>) => void;
   updateStorageSettings: (storage: Partial<UserPreferences['storage']>) => void;
+  updateTranslationSettings: (translation: Partial<UserPreferences['translation']>) => void;
   clearAllData: () => void;
   exportData: () => string;
   importData: (data: string) => boolean;
@@ -80,6 +89,14 @@ const defaultPreferences: UserPreferences = {
     warningThreshold: 80, // 80%时警告
     lastWarningTime: 0, // 上次警告时间
   },
+  translation: {
+    deeplxApiKey: '', // 默认为空，需要用户配置
+    targetLanguage: 'zh', // 默认翻译为中文
+    enableCache: true, // 默认启用缓存
+    cacheExpiry: 24, // 默认缓存24小时
+    autoTranslate: false, // 默认不自动翻译
+    showOriginal: true, // 默认显示原文
+  },
 };
 
 // Action 类型
@@ -93,6 +110,7 @@ type PreferencesAction =
   | { type: 'UPDATE_SETTINGS'; payload: Partial<UserPreferences['settings']> }
   | { type: 'UPDATE_LAYOUT_SETTINGS'; payload: Partial<UserPreferences['layout']> }
   | { type: 'UPDATE_STORAGE_SETTINGS'; payload: Partial<UserPreferences['storage']> }
+  | { type: 'UPDATE_TRANSLATION_SETTINGS'; payload: Partial<UserPreferences['translation']> }
   | { type: 'CLEAR_ALL_DATA' };
 
 // Reducer
@@ -191,6 +209,12 @@ const preferencesReducer = (state: UserPreferences, action: PreferencesAction): 
         storage: { ...state.storage, ...action.payload },
       };
 
+    case 'UPDATE_TRANSLATION_SETTINGS':
+      return {
+        ...state,
+        translation: { ...state.translation, ...action.payload },
+      };
+
     case 'CLEAR_ALL_DATA':
       return defaultPreferences;
 
@@ -252,6 +276,10 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
             storage: {
               ...defaultPreferences.storage,
               ...savedPreferences.storage,
+            },
+            translation: {
+              ...defaultPreferences.translation,
+              ...savedPreferences.translation,
             },
           };
           dispatch({ type: 'LOAD_PREFERENCES', payload: mergedPreferences });
@@ -417,6 +445,10 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     dispatch({ type: 'UPDATE_STORAGE_SETTINGS', payload: storage });
   };
 
+  const updateTranslationSettings = (translation: Partial<UserPreferences['translation']>) => {
+    dispatch({ type: 'UPDATE_TRANSLATION_SETTINGS', payload: translation });
+  };
+
   const clearAllData = () => {
     dispatch({ type: 'CLEAR_ALL_DATA' });
   };
@@ -450,6 +482,7 @@ export const UserPreferencesProvider: React.FC<UserPreferencesProviderProps> = (
     updateSettings,
     updateLayoutSettings,
     updateStorageSettings,
+    updateTranslationSettings,
     clearAllData,
     exportData,
     importData,

@@ -1,19 +1,30 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Clock, Newspaper, RefreshCw, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, Clock, Newspaper, RefreshCw, AlertCircle, ChevronLeft, ChevronRight, Languages, Eye, EyeOff } from 'lucide-react';
 import { newsService, NewsItem } from '../../utils/newsService';
+import { translationService, SupportedLanguage } from '../../utils/translationService';
+import { useUserPreferences } from '../contexts/UserPreferencesContext';
 
 interface SidebarNewsPanelProps {
   maxItems?: number;
 }
 
+interface TranslatedNewsItem extends NewsItem {
+  translatedTitle?: string;
+  isTranslating?: boolean;
+  translationError?: string;
+}
+
 export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProps) {
-  const [news, setNews] = useState<NewsItem[]>([]);
+  const [news, setNews] = useState<TranslatedNewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showTranslated, setShowTranslated] = useState(false);
+
+  const { preferences } = useUserPreferences();
 
   const fetchNews = async (isRefresh = false) => {
     if (isRefresh) {
@@ -55,6 +66,88 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
     setIsExpanded(false);
   };
 
+  // 翻译单个新闻标题
+  const translateNewsItem = async (index: number) => {
+    const { translation } = preferences;
+
+    if (!translation.deeplxApiKey) {
+      alert('请先在设置中配置 DeepLX API Key');
+      return;
+    }
+
+    const newsItem = news[index];
+    if (!newsItem || newsItem.isTranslating) return;
+
+    // 更新状态为翻译中
+    setNews(prevNews =>
+      prevNews.map((item, i) =>
+        i === index ? { ...item, isTranslating: true, translationError: undefined } : item
+      )
+    );
+
+    try {
+      const result = await translationService.translateText(
+        newsItem.title,
+        translation.targetLanguage as SupportedLanguage,
+        translation.deeplxApiKey,
+        'auto' as SupportedLanguage,
+        translation.enableCache,
+        translation.cacheExpiry
+      );
+
+      setNews(prevNews =>
+        prevNews.map((item, i) =>
+          i === index ? {
+            ...item,
+            translatedTitle: result.error ? undefined : result.translatedText,
+            isTranslating: false,
+            translationError: result.error
+          } : item
+        )
+      );
+    } catch (error) {
+      setNews(prevNews =>
+        prevNews.map((item, i) =>
+          i === index ? {
+            ...item,
+            isTranslating: false,
+            translationError: '翻译失败，请稍后重试'
+          } : item
+        )
+      );
+    }
+  };
+
+  // 批量翻译所有新闻
+  const translateAllNews = async () => {
+    const { translation } = preferences;
+
+    if (!translation.deeplxApiKey) {
+      alert('请先在设置中配置 DeepLX API Key');
+      return;
+    }
+
+    // 只翻译还没有翻译的新闻
+    const untranslatedIndices = news
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => !item.translatedTitle && !item.isTranslating)
+      .map(({ index }) => index);
+
+    if (untranslatedIndices.length === 0) return;
+
+    // 批量翻译（限制并发数量）
+    const batchSize = 3;
+    for (let i = 0; i < untranslatedIndices.length; i += batchSize) {
+      const batch = untranslatedIndices.slice(i, i + batchSize);
+      await Promise.all(batch.map(index => translateNewsItem(index)));
+
+      // 添加延迟避免API限制
+      if (i + batchSize < untranslatedIndices.length) {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+  };
+
   return (
     <div
       className={`fixed top-20 right-0 z-40 transition-all duration-300 ease-in-out ${
@@ -71,14 +164,31 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
               <Newspaper className="h-5 w-5 text-white" />
               <span className="text-white font-medium text-sm">科技新闻</span>
             </div>
-            <button
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="p-1 text-white hover:bg-white/20 rounded transition-colors duration-200 disabled:opacity-50"
-              title="刷新新闻"
-            >
-              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-            </button>
+            <div className="flex items-center space-x-1">
+              {/* 翻译控制按钮 */}
+              <button
+                onClick={() => setShowTranslated(!showTranslated)}
+                className="p-1 text-white hover:bg-white/20 rounded transition-colors duration-200"
+                title={showTranslated ? "显示原文" : "显示翻译"}
+              >
+                {showTranslated ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              </button>
+              <button
+                onClick={translateAllNews}
+                className="p-1 text-white hover:bg-white/20 rounded transition-colors duration-200"
+                title="翻译所有新闻"
+              >
+                <Languages className="h-4 w-4" />
+              </button>
+              <button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                className="p-1 text-white hover:bg-white/20 rounded transition-colors duration-200 disabled:opacity-50"
+                title="刷新新闻"
+              >
+                <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
           </>
         ) : (
           <div className="flex items-center justify-center w-full">
@@ -124,24 +234,74 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
           <div className="h-full overflow-y-auto">
             <div className="p-2 space-y-2">
               {news.map((item, index) => (
-                <a
+                <div
                   key={item.guid || index}
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 hover:shadow-md"
+                  className="group bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-all duration-200 hover:shadow-md"
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-xs font-medium text-gray-900 dark:text-gray-100 line-clamp-3 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors leading-tight">
-                      {item.title}
-                    </h3>
-                    <ExternalLink className="h-3 w-3 text-gray-400 group-hover:text-orange-500 transition-colors flex-shrink-0 ml-2 mt-0.5" />
-                  </div>
-                  <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-                    <Clock className="h-3 w-3 mr-1" />
-                    <span>{newsService.formatPublishDate(item.pubDate)}</span>
-                  </div>
-                </a>
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block p-3"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1 pr-2">
+                        {/* 显示翻译后的标题或原标题 */}
+                        <h3 className="text-xs font-medium text-gray-900 dark:text-gray-100 line-clamp-3 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors leading-tight">
+                          {showTranslated && item.translatedTitle ? item.translatedTitle : item.title}
+                        </h3>
+
+                        {/* 显示原文（当显示翻译且设置了显示原文时） */}
+                        {showTranslated && item.translatedTitle && preferences.translation.showOriginal && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 leading-tight">
+                            {item.title}
+                          </p>
+                        )}
+
+                        {/* 翻译错误提示 */}
+                        {item.translationError && (
+                          <p className="text-xs text-red-500 mt-1">
+                            {item.translationError}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="flex items-center space-x-1 flex-shrink-0">
+                        {/* 翻译按钮 */}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            translateNewsItem(index);
+                          }}
+                          disabled={item.isTranslating}
+                          className="p-1 text-gray-400 hover:text-orange-500 transition-colors disabled:opacity-50"
+                          title="翻译此条新闻"
+                        >
+                          {item.isTranslating ? (
+                            <RefreshCw className="h-3 w-3 animate-spin" />
+                          ) : (
+                            <Languages className="h-3 w-3" />
+                          )}
+                        </button>
+
+                        <ExternalLink className="h-3 w-3 text-gray-400 group-hover:text-orange-500 transition-colors" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+                      <Clock className="h-3 w-3 mr-1" />
+                      <span>{newsService.formatPublishDate(item.pubDate)}</span>
+
+                      {/* 翻译状态指示器 */}
+                      {item.translatedTitle && (
+                        <span className="ml-2 px-1.5 py-0.5 bg-green-100 text-green-600 rounded text-xs">
+                          已翻译
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                </div>
               ))}
             </div>
 

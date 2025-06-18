@@ -116,11 +116,11 @@ interface UsageStatsProps {
 
 export const UsageStats: React.FC<UsageStatsProps> = ({ className = '' }) => {
   const { preferences } = useUserPreferences();
-  
+
   const totalUsage = preferences.usageHistory.reduce((sum, item) => sum + item.usageCount, 0);
   const uniqueTools = preferences.usageHistory.length;
-  const mostUsedTool = preferences.usageHistory.reduce((max, item) => 
-    item.usageCount > (max?.usageCount || 0) ? item : max, 
+  const mostUsedTool = preferences.usageHistory.reduce((max, item) =>
+    item.usageCount > (max?.usageCount || 0) ? item : max,
     null as typeof preferences.usageHistory[0] | null
   );
 
@@ -129,37 +129,37 @@ export const UsageStats: React.FC<UsageStatsProps> = ({ className = '' }) => {
   }
 
   return (
-    <div className={`bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 ${className}`}>
-      <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3 flex items-center">
-        <TrendingUp className="h-4 w-4 mr-2" />
+    <div className={`bg-gray-50 dark:bg-gray-800/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700 ${className}`}>
+      <h3 className="text-xs font-normal text-gray-600 dark:text-gray-400 mb-2 flex items-center">
+        <TrendingUp className="h-3 w-3 mr-1" />
         使用统计
       </h3>
-      
-      <div className="grid grid-cols-3 gap-4 text-center">
+
+      <div className="grid grid-cols-3 gap-2 text-center">
         <div>
-          <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {totalUsage}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            总使用次数
+          <div className="text-xs text-gray-500 dark:text-gray-500">
+            总使用
           </div>
         </div>
-        
+
         <div>
-          <div className="text-lg font-bold text-green-600 dark:text-green-400">
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {uniqueTools}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            使用过的工具
+          <div className="text-xs text-gray-500 dark:text-gray-500">
+            工具数
           </div>
         </div>
-        
+
         <div>
-          <div className="text-lg font-bold text-purple-600 dark:text-purple-400">
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {mostUsedTool?.usageCount || 0}
           </div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            最高使用次数
+          <div className="text-xs text-gray-500 dark:text-gray-500">
+            最高次数
           </div>
         </div>
       </div>
