@@ -51,3 +51,4 @@ issues/
 docs/development/
 temp/
 scratch/
+.claude/settings.local.json

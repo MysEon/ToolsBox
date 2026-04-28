@@ -1,4 +1,4 @@
-import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap, MessageSquare } from 'lucide-react';
+import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap } from 'lucide-react';
 
 export interface Tool {
   id: string;
@@ -67,17 +67,6 @@ export const tools: Tool[] = [
     category: '学术工具',
     features: ['文献检索', '期刊评估', '学术社交', '研究工具', '权威资源'],
     color: 'from-indigo-500 to-purple-600'
-  },
-  {
-    id: 'ai-chat',
-    name: '🤖 AI问答助手',
-    description: '支持双对话框独立运行的AI问答工具，兼容OpenAI、DeepSeek、Gemini接口，支持PDF文件上传解析',
-    icon: MessageSquare,
-    href: '/tools/ai-chat',
-    status: 'active',
-    category: 'AI工具',
-    features: ['双对话框', '多模型支持', 'PDF解析', '本地存储', '对话历史'],
-    color: 'from-blue-500 to-indigo-600'
   },
   {
     id: 'password-generator',
