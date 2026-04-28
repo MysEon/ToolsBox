@@ -1,4 +1,5 @@
 import Parser from 'rss-parser';
+import { formatTimeAgo } from '@/shared/utils/timeFormat';
 
 export interface NewsItem {
   title: string;
@@ -83,24 +84,7 @@ class NewsService {
   formatPublishDate(dateString: string): string {
     try {
       const date = new Date(dateString);
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffHours / 24);
-
-      if (diffHours < 1) {
-        const diffMinutes = Math.floor(diffMs / (1000 * 60));
-        return `${diffMinutes}分钟前`;
-      } else if (diffHours < 24) {
-        return `${diffHours}小时前`;
-      } else if (diffDays < 7) {
-        return `${diffDays}天前`;
-      } else {
-        return date.toLocaleDateString('zh-CN', {
-          month: 'short',
-          day: 'numeric'
-        });
-      }
+      return formatTimeAgo(date.getTime());
     } catch {
       return '时间未知';
     }

@@ -1,4 +1,5 @@
 import { CompleteProfile } from './addressGenerator';
+import { copyToClipboard as copyTextToClipboard } from '@/shared/utils/fileExport';
 
 // 导出为JSON格式
 export function exportToJSON(data: CompleteProfile | CompleteProfile[], filename?: string): void {
@@ -137,28 +138,7 @@ ${'='.repeat(50)}
 // 复制到剪贴板
 export async function copyToClipboard(data: CompleteProfile | CompleteProfile[]): Promise<void> {
   const jsonString = JSON.stringify(data, null, 2);
-  
-  try {
-    await navigator.clipboard.writeText(jsonString);
-  } catch (err) {
-    // 降级方案：使用传统方法
-    const textArea = document.createElement('textarea');
-    textArea.value = jsonString;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-      document.execCommand('copy');
-    } catch (copyErr) {
-      throw new Error('Failed to copy to clipboard');
-    } finally {
-      document.body.removeChild(textArea);
-    }
-  }
+  await copyTextToClipboard(jsonString);
 }
 
 // 格式化显示单个档案

@@ -1,4 +1,5 @@
 import { CustomContainer, ContainerCheckResult, DockerCenterConfig } from '../types/dockerCenter';
+import { generateId } from '@/shared/utils/idGenerator';
 
 const STORAGE_KEYS = {
   CONTAINERS: 'docker-center-containers',
@@ -175,7 +176,7 @@ export class ContainerStorage {
 
   // 生成唯一ID
   static generateId(): string {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    return generateId();
   }
 
   // 验证容器URL

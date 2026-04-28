@@ -17,6 +17,7 @@ import {
 import { useUserPreferences } from '../contexts/UserPreferencesContext';
 import { advancedStorage } from '../utils/indexedDB';
 import { DataMigration } from '../utils/dataMigration';
+import { downloadBlob } from '../utils/fileExport';
 
 interface StorageManagerProps {
   isOpen: boolean;
@@ -73,14 +74,7 @@ const StorageManagerContent: React.FC<StorageManagerProps> = ({ isOpen, onClose 
     try {
       const data = exportData();
       const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `toolsbox-backup-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      downloadBlob(blob, `toolsbox-backup-${new Date().toISOString().split('T')[0]}.json`);
       setMessage({ type: 'success', text: '数据导出成功！' });
     } catch (error) {
       setMessage({ type: 'error', text: '数据导出失败' });
