@@ -3,6 +3,7 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import CryptoTool from '@/tools/crypto-tool/components/CryptoTool';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 export default function CryptoToolPage() {
   return (
@@ -31,7 +32,7 @@ export default function CryptoToolPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <CryptoTool />
+        <ErrorBoundary><CryptoTool /></ErrorBoundary>
       </main>
     </div>
   );

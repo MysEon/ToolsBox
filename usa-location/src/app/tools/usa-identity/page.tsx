@@ -6,6 +6,7 @@ import GeneratorSettings from '../../../tools/usa-identity/components/GeneratorS
 import GeneratorResults from '../../../tools/usa-identity/components/GeneratorResults';
 import MapComponent from '../../../tools/usa-identity/components/MapComponent';
 import { CompleteProfile } from '../../../tools/usa-identity/utils/addressGenerator';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 export default function USAIdentityGenerator() {
   const [generatedProfiles, setGeneratedProfiles] = useState<CompleteProfile[]>([]);
@@ -25,6 +26,7 @@ export default function USAIdentityGenerator() {
       />
 
       {/* 主要内容 - 左右分栏布局 */}
+      <ErrorBoundary>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
           {/* 左侧：生成设置 (30%) */}
@@ -44,6 +46,7 @@ export default function USAIdentityGenerator() {
           </div>
         </div>
       </main>
+      </ErrorBoundary>
 
       {/* 页脚 */}
       <footer className="bg-gray-900 text-white">

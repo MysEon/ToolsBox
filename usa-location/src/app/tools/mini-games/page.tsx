@@ -3,6 +3,7 @@
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import MiniGames from '@/tools/mini-games/components/MiniGames';
+import { ErrorBoundary } from '@/shared/components/ErrorBoundary';
 
 export default function MiniGamesPage() {
   return (
@@ -28,7 +29,7 @@ export default function MiniGamesPage() {
 
       {/* 主要内容 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <MiniGames />
+        <ErrorBoundary><MiniGames /></ErrorBoundary>
       </main>
     </div>
   );
