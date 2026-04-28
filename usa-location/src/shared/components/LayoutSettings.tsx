@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { Settings, Grid, Maximize2, Minimize2, X } from 'lucide-react';
-
-export type LayoutDensity = 'compact' | 'standard' | 'spacious';
-export type GridColumns = 'auto' | '3' | '4' | '5' | '6';
+import { LayoutDensity, GridColumns } from '../types/layout';
+export type { LayoutDensity, GridColumns };
 
 interface LayoutSettingsProps {
   isOpen: boolean;

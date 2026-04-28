@@ -1,10 +1,5 @@
 import CryptoJS from 'crypto-js';
-
-export interface CryptoResult {
-  success: boolean;
-  result?: string;
-  error?: string;
-}
+import { CryptoResult } from '../types';
 
 // AES 加密
 export const encryptAES = (text: string, key: string): CryptoResult => {

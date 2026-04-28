@@ -1,8 +1,4 @@
-export interface CryptoResult {
-  success: boolean;
-  result?: string;
-  error?: string;
-}
+import { CryptoResult } from '../types';
 
 // 凯撒密码加密
 export const encryptCaesar = (text: string, shift: number): CryptoResult => {

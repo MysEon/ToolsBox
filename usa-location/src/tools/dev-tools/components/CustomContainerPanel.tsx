@@ -5,8 +5,7 @@ import { Plus, Edit, Trash2, ExternalLink, Play, Square, RefreshCw, BarChart3 } 
 import { CustomContainer, ContainerStatus } from '../types/dockerCenter';
 import { ContainerStorage } from '../utils/containerStorage';
 import { ContainerMonitor } from '../utils/containerMonitor';
-import { AddContainerModal } from './AddContainerModal';
-import { EditContainerModal } from './EditContainerModal';
+import { ContainerFormModal } from './ContainerFormModal';
 import { ContainerStatsModal } from './ContainerStatsModal';
 
 interface CustomContainerPanelProps {
@@ -252,7 +251,7 @@ export function CustomContainerPanel({ className = '' }: CustomContainerPanelPro
 
       {/* 模态框 */}
       {showAddModal && (
-        <AddContainerModal
+        <ContainerFormModal
           onClose={() => setShowAddModal(false)}
           onSave={() => {
             setShowAddModal(false);
@@ -262,7 +261,7 @@ export function CustomContainerPanel({ className = '' }: CustomContainerPanelPro
       )}
 
       {editingContainer && (
-        <EditContainerModal
+        <ContainerFormModal
           container={editingContainer}
           onClose={() => setEditingContainer(null)}
           onSave={() => {

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useUserPreferences } from '@/shared/contexts/UserPreferencesContext';
 import { academicResources, categories, getResourcesByCategory, AcademicResource } from '@/tools/academic-center/data/academicResources';
 import { AcademicResourceCard } from '@/tools/academic-center/components/AcademicResourceCard';
-import { CategoryFilter } from '@/tools/academic-center/components/CategoryFilter';
+import { CategoryFilter } from '@/shared/components/CategoryFilter';
 import { SearchBar } from '@/tools/academic-center/components/SearchBar';
 import { AddCustomResourceModal } from '../../../tools/academic-center/components/AddCustomResourceModal';
 import { EditCustomResourceModal } from '../../../tools/academic-center/components/EditCustomResourceModal';

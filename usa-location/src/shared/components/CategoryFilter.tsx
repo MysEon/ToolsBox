@@ -15,7 +15,7 @@ export function CategoryFilter({ categories, selectedCategory, onCategoryChange 
         <Filter className="h-4 w-4" />
         <span className="text-sm font-medium">分类筛选:</span>
       </div>
-      
+
       <div className="flex flex-wrap gap-2">
         {categories.map((category) => (
           <button

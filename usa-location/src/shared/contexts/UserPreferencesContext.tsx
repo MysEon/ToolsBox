@@ -11,8 +11,8 @@ export interface ToolUsageHistory {
   usageCount: number;
 }
 
-export type LayoutDensity = 'compact' | 'standard' | 'spacious';
-export type GridColumns = 'auto' | '3' | '4' | '5' | '6';
+import { LayoutDensity, GridColumns } from '../types/layout';
+export type { LayoutDensity, GridColumns };
 
 export interface UserPreferences {
   favoriteTools: string[];

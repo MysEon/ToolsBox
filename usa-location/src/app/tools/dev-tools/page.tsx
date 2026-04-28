@@ -5,7 +5,7 @@ import { ArrowLeft, Search, Filter, ExternalLink, Download, Star, Container } fr
 import Link from 'next/link';
 import { devTools, categories, getToolsByCategory, getLicenseColor } from '@/tools/dev-tools/data/devTools';
 import { DevToolCard } from '@/tools/dev-tools/components/DevToolCard';
-import { CategoryFilter } from '@/tools/dev-tools/components/CategoryFilter';
+import { CategoryFilter } from '@/shared/components/CategoryFilter';
 import { DockerCenter } from '@/tools/dev-tools/components/DockerCenter';
 
 export default function DevToolsPage() {
