@@ -42,7 +42,7 @@ export default function DevToolsPage() {
         subtitle="汇聚常见编程开发工具的官方下载地址和安装教程"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="w-[80%] max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Docker center entry */}
         <div className="mb-8">
           <div className="bg-zinc-900 dark:bg-zinc-800 rounded-xl p-4 md:p-6 text-white">

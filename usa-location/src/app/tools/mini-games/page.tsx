@@ -12,7 +12,7 @@ export default function MiniGamesPage() {
         subtitle="休闲娱乐，放松一下"
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-[80%] max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <ErrorBoundary><MiniGames /></ErrorBoundary>
       </main>
     </div>

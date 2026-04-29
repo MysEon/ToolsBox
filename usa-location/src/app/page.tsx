@@ -54,9 +54,9 @@ const gridColClasses: Record<string, string> = {
 };
 
 const containerClasses: Record<string, string> = {
-  compact: 'max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6',
-  standard: 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8',
-  spacious: 'max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 py-12',
+  compact: 'w-[90%] max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6',
+  standard: 'w-[80%] max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8',
+  spacious: 'w-[70%] max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12 py-12',
 };
 
 const spacingClasses: Record<string, string> = {
@@ -123,45 +123,51 @@ export default function Home() {
       <SidebarNewsPanel maxItems={15} />
 
       <main className={containerClasses[density] || containerClasses.standard}>
-        {/* Welcome */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center p-3 bg-zinc-900 dark:bg-zinc-100 rounded-2xl mb-6">
-            <Wrench className="h-10 w-10 text-white dark:text-zinc-900" />
+        {/* Welcome + Search */}
+        <div className="mb-12 pt-8 pb-4">
+          <div className="max-w-2xl mx-auto">
+            {/* Icon + Title */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-zinc-900 dark:bg-zinc-100 mb-5 shadow-sm">
+                <Wrench className="h-7 w-7 text-white dark:text-zinc-900" />
+              </div>
+              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-3">
+                开发者工具箱
+              </h1>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
+                集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
+              </p>
+            </div>
+
+            {/* Search */}
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              suggestions={searchSuggestions}
+              placeholder="搜索工具、分类、功能..."
+            />
+
+            {/* Toolbar */}
+            <div className="flex justify-center gap-1 mt-4">
+              <button
+                onClick={() => setIsTranslationSettingsOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
+              >
+                <Languages className="h-3.5 w-3.5" />
+                <span>翻译</span>
+              </button>
+              <button
+                onClick={() => setIsStorageManagerOpen(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
+              >
+                <Database className="h-3.5 w-3.5" />
+                <span>存储</span>
+              </button>
+              <div className="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors">
+                <LayoutSettingsButton onClick={() => setIsLayoutSettingsOpen(true)} />
+              </div>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">
-            欢迎使用{' '}
-            <span className="text-zinc-900 dark:text-zinc-100">开发者工具箱</span>
-          </h1>
-          <p className="text-lg text-zinc-500 dark:text-zinc-400 mb-8 max-w-2xl mx-auto leading-relaxed">
-            集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
-          </p>
-
-          {/* Inline search bar on home page */}
-          <SearchBar
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            suggestions={searchSuggestions}
-            placeholder="搜索工具..."
-          />
-        </div>
-
-        {/* Toolbar */}
-        <div className="flex justify-end space-x-3 mb-8">
-          <button
-            onClick={() => setIsTranslationSettingsOpen(true)}
-            className="flex items-center space-x-2 px-3 py-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-          >
-            <Languages className="h-4 w-4" />
-            <span>翻译设置</span>
-          </button>
-          <button
-            onClick={() => setIsStorageManagerOpen(true)}
-            className="flex items-center space-x-2 px-3 py-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
-          >
-            <Database className="h-4 w-4" />
-            <span>存储管理</span>
-          </button>
-          <LayoutSettingsButton onClick={() => setIsLayoutSettingsOpen(true)} />
         </div>
 
         {/* Section tabs */}

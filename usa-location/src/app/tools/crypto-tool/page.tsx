@@ -12,7 +12,7 @@ export default function CryptoToolPage() {
         subtitle="支持主流加密算法和古典密码的专业加密解密工具"
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-[80%] max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <ErrorBoundary><CryptoTool /></ErrorBoundary>
       </main>
     </div>
