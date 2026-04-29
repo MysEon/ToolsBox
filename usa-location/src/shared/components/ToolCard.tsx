@@ -12,141 +12,103 @@ interface ToolCardProps {
   className?: string;
 }
 
+const paddingMap: Record<string, string> = {
+  compact: 'p-4',
+  spacious: 'p-7',
+  standard: 'p-5',
+};
+
+const gapMap: Record<string, string> = {
+  compact: 'mb-2.5',
+  spacious: 'mb-5',
+  standard: 'mb-3.5',
+};
+
+const statusColors: Record<string, string> = {
+  active: 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400',
+  beta: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
+  'coming-soon': 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
+};
+
+const statusTexts: Record<string, string> = {
+  active: '可用',
+  beta: '测试版',
+  'coming-soon': '即将推出',
+};
+
 export default function ToolCard({ tool, className = '' }: ToolCardProps) {
   const { preferences, recordToolUsage } = useUserPreferences();
 
-  const StatusIcon = tool.status === 'active' ? CheckCircle :
-                    tool.status === 'beta' ? Zap : Clock;
+  const density = preferences.layout.density;
+  const padding = paddingMap[density] || paddingMap.standard;
+  const gap = gapMap[density] || gapMap.standard;
 
   const handleClick = () => {
-    if (tool.status === 'active') {
-      recordToolUsage(tool.id);
-    }
-  };
-
-  // 根据布局密度获取内边距
-  const getPaddingClasses = () => {
-    const { density } = preferences.layout;
-
-    switch (density) {
-      case 'compact':
-        return 'p-4';
-      case 'spacious':
-        return 'p-8';
-      default:
-        return 'p-6';
-    }
-  };
-
-  // 根据布局密度获取间距
-  const getSpacingClasses = () => {
-    const { density } = preferences.layout;
-
-    switch (density) {
-      case 'compact':
-        return 'mb-3';
-      case 'spacious':
-        return 'mb-6';
-      default:
-        return 'mb-4';
-    }
-  };
-  
-  const statusColors = {
-    active: 'bg-green-100 text-green-800 border-green-200',
-    beta: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    'coming-soon': 'bg-gray-100 text-gray-600 border-gray-200'
-  };
-
-  const statusTexts = {
-    active: '可用',
-    beta: '测试版',
-    'coming-soon': '即将推出'
+    if (tool.status === 'active') recordToolUsage(tool.id);
   };
 
   const CardContent = () => (
-    <div className={`group relative bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden ${className}`}>
-      {/* 渐变背景装饰 - 加高样式并显示分类信息 */}
-      <div className={`absolute top-0 left-0 w-full h-6 bg-gradient-to-r ${tool.color} flex items-center justify-between px-3`}>
-        {/* 左侧：分类信息 */}
-        <div className="text-white text-xs font-semibold">
-          {tool.category}
-        </div>
-
-        {/* 右侧：状态信息 */}
-        <div className="text-white text-xs font-semibold">
-          {statusTexts[tool.status]}
-        </div>
-      </div>
-
-      {/* 卡片内容 */}
-      <div className={`${getPaddingClasses()} pt-8`}>
-        {/* 头部：图标、状态和收藏 */}
-        <div className={`flex items-start justify-between ${getSpacingClasses()}`}>
-          <div className={`p-3 rounded-lg bg-gradient-to-r ${tool.color} text-white shadow-lg`}>
-            <tool.icon className="h-6 w-6" />
+    <div
+      className={`group relative bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 hover:shadow-md transition-all duration-200 ${className}`}
+    >
+      <div className={padding}>
+        {/* Header: icon + favorite */}
+        <div className={`flex items-start justify-between ${gap}`}>
+          <div className={`p-2.5 rounded-lg bg-gradient-to-r ${tool.color} text-white`}>
+            <tool.icon className="h-5 w-5" />
           </div>
-          <div className="flex items-center space-x-2">
-            <FavoriteButton toolId={tool.id} size="sm" />
-          </div>
+          <FavoriteButton toolId={tool.id} size="sm" />
         </div>
 
-        {/* 标题和描述 */}
-        <div className={getSpacingClasses()}>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        {/* Title + description */}
+        <div className={gap}>
+          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1.5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {tool.name}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed line-clamp-3">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
             {tool.description}
           </p>
         </div>
 
-        {/* 分类标签 */}
-        <div className={getSpacingClasses()}>
-          <span className="inline-block px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-md">
-            {tool.category}
+        {/* Status badge */}
+        <div className={gap}>
+          <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[tool.status]}`}>
+            {statusTexts[tool.status]}
           </span>
         </div>
 
-        {/* 功能特点 */}
-        <div className="mb-4">
-          <div className="flex flex-wrap gap-1">
-            {tool.features.slice(0, 3).map((feature, index) => (
-              <span 
-                key={index}
-                className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md"
-              >
-                {feature}
-              </span>
-            ))}
-            {tool.features.length > 3 && (
-              <span className="inline-block px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md">
-                +{tool.features.length - 3}
-              </span>
-            )}
+        {/* Features */}
+        {tool.features.length > 0 && (
+          <div className="mb-3">
+            <div className="flex flex-wrap gap-1">
+              {tool.features.slice(0, 3).map((feature, index) => (
+                <span key={index} className="inline-block px-2 py-0.5 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 text-xs rounded">
+                  {feature}
+                </span>
+              ))}
+              {tool.features.length > 3 && (
+                <span className="inline-block px-2 py-0.5 text-zinc-400 dark:text-zinc-500 text-xs">
+                  +{tool.features.length - 3}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* 底部：操作按钮 */}
-        <div className="flex items-center justify-between">
-          <div className="text-xs text-gray-500">
+        {/* Action */}
+        <div className="flex items-center justify-between pt-1">
+          <span className="text-xs text-zinc-400 dark:text-zinc-500">
             {tool.status === 'active' ? '立即使用' : '敬请期待'}
-          </div>
-          <div className="flex items-center text-blue-600 group-hover:text-blue-700 transition-colors">
-            <span className="text-sm font-medium mr-1">
-              {tool.status === 'active' ? '进入工具' : '了解更多'}
-            </span>
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-          </div>
+          </span>
+          <span className="inline-flex items-center text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            {tool.status === 'active' ? '进入工具' : '了解更多'}
+            <ArrowRight className="h-3.5 w-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
+          </span>
         </div>
       </div>
-
-      {/* 悬停效果装饰 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
     </div>
   );
 
-  // 如果工具可用，包装为链接
   if (tool.status === 'active') {
     return (
       <Link href={tool.href} className="block" onClick={handleClick}>
@@ -155,6 +117,5 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
     );
   }
 
-  // 否则显示为普通卡片
   return <CardContent />;
 }

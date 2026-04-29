@@ -111,14 +111,14 @@ export const FavoriteToolsList: React.FC<FavoriteToolsListProps> = ({
   if (favoriteTools.length === 0) {
     return (
       <div className={`text-center py-8 ${className}`}>
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full mb-4">
-          <Heart className="h-8 w-8 text-gray-400" />
+        <div className="inline-flex items-center justify-center w-14 h-14 bg-zinc-100 dark:bg-zinc-800 rounded-full mb-4">
+          <Heart className="h-7 w-7 text-zinc-400 dark:text-zinc-500" />
         </div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+        <h3 className="text-base font-medium text-zinc-900 dark:text-zinc-100 mb-2">
           还没有收藏的工具
         </h3>
-        <p className="text-gray-500 dark:text-gray-400 text-sm">
-          点击工具卡片上的 ❤️ 按钮来收藏常用工具
+        <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+          点击工具卡片上的收藏按钮来收藏常用工具
         </p>
       </div>
     );
@@ -131,7 +131,7 @@ export const FavoriteToolsList: React.FC<FavoriteToolsListProps> = ({
         return (
           <div
             key={tool.id}
-            className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+            className="flex items-center space-x-3 p-3 bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors cursor-pointer"
             onClick={() => onToolClick?.(tool.id)}
           >
             <div className="flex-shrink-0">

@@ -71,7 +71,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
     const { translation } = preferences;
 
     if (!translation.deeplxApiKey) {
-      alert('请先在设置中配置 DeepLX API Key');
+      console.warn('DeepLX API Key not configured');
       return;
     }
 
@@ -123,7 +123,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
     const { translation } = preferences;
 
     if (!translation.deeplxApiKey) {
-      alert('请先在设置中配置 DeepLX API Key');
+      console.warn('DeepLX API Key not configured');
       return;
     }
 
@@ -157,7 +157,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
       onMouseLeave={handleMouseLeave}
     >
       {/* 侧边栏头部 */}
-      <div className="flex items-center justify-between p-3 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-orange-500 to-red-500">
+      <div className="flex items-center justify-between p-3 border-b border-zinc-200 dark:border-zinc-700 bg-zinc-900 dark:bg-zinc-800">
         {isExpanded ? (
           <>
             <div className="flex items-center space-x-2">
@@ -199,7 +199,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
 
       {/* 展开/收起指示器 */}
       <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-full">
-        <div className="bg-orange-500 text-white p-1 rounded-l-md shadow-lg">
+        <div className="bg-zinc-900 dark:bg-zinc-700 text-white p-1 rounded-l-md shadow-lg">
           {isExpanded ? (
             <ChevronLeft className="h-4 w-4" />
           ) : (
@@ -247,7 +247,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1 pr-2">
                         {/* 显示翻译后的标题或原标题 */}
-                        <h3 className="text-xs font-medium text-gray-900 dark:text-gray-100 line-clamp-3 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors leading-tight">
+                        <h3 className="text-xs font-medium text-zinc-900 dark:text-zinc-100 line-clamp-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-tight">
                           {showTranslated && item.translatedTitle ? item.translatedTitle : item.title}
                         </h3>
 
@@ -285,7 +285,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
                           )}
                         </button>
 
-                        <ExternalLink className="h-3 w-3 text-gray-400 group-hover:text-orange-500 transition-colors" />
+                        <ExternalLink className="h-3 w-3 text-zinc-400 group-hover:text-blue-500 transition-colors" />
                       </div>
                     </div>
 

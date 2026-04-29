@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from '../ThemeToggle';
-import HeaderSearchBar, { MobileSearchButton } from '../HeaderSearchBar';
+import SearchBar, { MobileSearchButton } from '../SearchBar';
 import {
   Home,
   ArrowLeft,
@@ -80,11 +80,12 @@ export default function Header({
           {/* 中间：搜索框 (仅在首页显示) */}
           {showSearch && (
             <div className="hidden md:flex flex-1 justify-center max-w-md mx-4">
-              <HeaderSearchBar
+              <SearchBar
                 searchTerm={searchTerm}
                 onSearchChange={onSearchChange}
                 suggestions={searchSuggestions}
                 placeholder="搜索工具..."
+                variant="header"
                 className="w-full"
               />
             </div>

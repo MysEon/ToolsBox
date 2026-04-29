@@ -29,11 +29,11 @@ export function CollapsiblePanel({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden ${className}`}>
+    <div className={`bg-white dark:bg-zinc-800 rounded-lg shadow-lg overflow-hidden ${className}`}>
       {/* 标题栏 */}
       <button
         onClick={toggleExpanded}
-        className={`w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 ${titleClassName}`}
+        className={`w-full px-6 py-4 flex items-center justify-between text-left hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors duration-200 ${titleClassName}`}
       >
         <div className="flex items-center space-x-3">
           {icon && (

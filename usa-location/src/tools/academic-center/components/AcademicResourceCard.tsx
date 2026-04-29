@@ -15,7 +15,7 @@ export function AcademicResourceCard({ resource, onEdit }: AcademicResourceCardP
   };
 
   return (
-    <div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+    <div className="group relative bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 hover:shadow-md transition-all duration-200 overflow-hidden">
       {/* 渐变背景装饰 - 所有卡片都使用加高样式 */}
       <div className={`absolute top-0 left-0 w-full h-6 bg-gradient-to-r ${resource.color} flex items-center justify-between px-3`}>
         {/* 左侧：分类信息 */}
@@ -71,10 +71,10 @@ export function AcademicResourceCard({ resource, onEdit }: AcademicResourceCardP
 
         {/* 标题和描述 */}
         <div className="mb-3">
-          <h3 className="text-base font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {resource.name}
           </h3>
-          <p className="text-gray-600 text-xs leading-relaxed line-clamp-2">
+          <p className="text-zinc-500 dark:text-zinc-400 text-xs leading-relaxed line-clamp-2">
             {resource.description}
           </p>
         </div>
@@ -85,13 +85,13 @@ export function AcademicResourceCard({ resource, onEdit }: AcademicResourceCardP
             {resource.features.slice(0, 3).map((feature) => (
               <span
                 key={feature}
-                className="inline-block px-1.5 py-0.5 bg-blue-50 text-blue-700 text-xs rounded"
+                className="inline-block px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 text-xs rounded"
               >
                 {feature}
               </span>
             ))}
             {resource.features.length > 3 && (
-              <span className="inline-block px-1.5 py-0.5 bg-gray-50 text-gray-500 text-xs rounded">
+              <span className="inline-block px-1.5 py-0.5 text-zinc-400 dark:text-zinc-500 text-xs">
                 +{resource.features.length - 3}
               </span>
             )}
@@ -114,8 +114,6 @@ export function AcademicResourceCard({ resource, onEdit }: AcademicResourceCardP
 
       </div>
 
-      {/* 悬停效果装饰 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-10 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
     </div>
   );
 }

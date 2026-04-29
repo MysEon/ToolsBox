@@ -35,13 +35,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const buttonClasses = `
     ${sizeClasses[size]}
     inline-flex items-center justify-center
-    rounded-lg border border-gray-200 dark:border-gray-700
-    bg-white dark:bg-gray-800
-    text-gray-700 dark:text-gray-200
-    hover:bg-gray-50 dark:hover:bg-gray-700
+    rounded-lg border border-zinc-200 dark:border-zinc-700
+    bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm
+    text-zinc-700 dark:text-zinc-200
+    hover:bg-zinc-50 dark:hover:bg-zinc-700
     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
     transition-all duration-200
-    shadow-sm hover:shadow-md
   `;
 
   if (variant === 'button') {

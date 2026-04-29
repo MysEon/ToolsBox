@@ -1,16 +1,17 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { ArrowLeft, GraduationCap, Star, Heart, Plus } from 'lucide-react';
-import Link from 'next/link';
+import { GraduationCap, Star, Heart, Plus } from 'lucide-react';
 import { useUserPreferences } from '@/shared/contexts/UserPreferencesContext';
-import { academicResources, categories, getResourcesByCategory, AcademicResource } from '@/tools/academic-center/data/academicResources';
+import { academicResources, categories, AcademicResource } from '@/tools/academic-center/data/academicResources';
 import { AcademicResourceCard } from '@/tools/academic-center/components/AcademicResourceCard';
 import { CategoryFilter } from '@/shared/components/CategoryFilter';
 import { SearchBar } from '@/tools/academic-center/components/SearchBar';
-import { AddCustomResourceModal } from '../../../tools/academic-center/components/AddCustomResourceModal';
-import { EditCustomResourceModal } from '../../../tools/academic-center/components/EditCustomResourceModal';
-import { customResourceStorage } from '../../../tools/academic-center/utils/customResourceStorage';
+import ToolPageHeader from '@/shared/components/ToolPageHeader';
+import EmptyState from '@/shared/components/EmptyState';
+import { AddCustomResourceModal } from '@/tools/academic-center/components/AddCustomResourceModal';
+import { EditCustomResourceModal } from '@/tools/academic-center/components/EditCustomResourceModal';
+import { customResourceStorage } from '@/tools/academic-center/utils/customResourceStorage';
 
 export default function AcademicCenterPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -24,10 +25,7 @@ export default function AcademicCenterPage() {
 
   const { preferences } = useUserPreferences();
 
-  // 加载自定义资源
-  useEffect(() => {
-    loadCustomResources();
-  }, []);
+  useEffect(() => { loadCustomResources(); }, []);
 
   const loadCustomResources = async () => {
     try {
@@ -40,153 +38,102 @@ export default function AcademicCenterPage() {
     }
   };
 
-  // 合并预设资源和自定义资源
-  const allResources = useMemo(() => {
-    return [...academicResources, ...customResources];
-  }, [customResources]);
+  const allResources = useMemo(() => [...academicResources, ...customResources], [customResources]);
 
-  // 获取所有分类（包括自定义资源的分类）
   const allCategories = useMemo(() => {
     const categorySet = new Set([...categories]);
-    customResources.forEach(resource => {
-      categorySet.add(resource.category);
-    });
+    customResources.forEach(r => categorySet.add(r.category));
     return Array.from(categorySet);
   }, [customResources]);
 
-  // 处理自定义资源操作
-  const handleAddSuccess = () => {
-    loadCustomResources();
-  };
+  const handleAddSuccess = () => { loadCustomResources(); };
+  const handleEditResource = (resourceId: string) => { setEditingResourceId(resourceId); setIsEditModalOpen(true); };
+  const handleEditSuccess = () => { loadCustomResources(); };
 
-  const handleEditResource = (resourceId: string) => {
-    setEditingResourceId(resourceId);
-    setIsEditModalOpen(true);
-  };
-
-  const handleEditSuccess = () => {
-    loadCustomResources();
-  };
-
-  // 过滤资源
   const filteredResources = useMemo(() => {
     let filtered = allResources;
-
-    // 按收藏筛选
     if (showFavoritesOnly) {
-      filtered = filtered.filter(resource =>
-        preferences.favoriteTools.includes(`academic-${resource.id}`)
-      );
+      filtered = filtered.filter(r => preferences.favoriteTools.includes(`academic-${r.id}`));
     }
-
-    // 按分类筛选
     if (selectedCategory !== '全部') {
-      filtered = filtered.filter(resource => resource.category === selectedCategory);
+      filtered = filtered.filter(r => r.category === selectedCategory);
     }
-
-    // 按搜索词筛选
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(resource =>
-        resource.name.toLowerCase().includes(term) ||
-        resource.description.toLowerCase().includes(term) ||
-        resource.features.some(feature => feature.toLowerCase().includes(term)) ||
-        resource.tags.some(tag => tag.toLowerCase().includes(term))
+      filtered = filtered.filter(r =>
+        r.name.toLowerCase().includes(term) ||
+        r.description.toLowerCase().includes(term) ||
+        r.features.some(f => f.toLowerCase().includes(term)) ||
+        r.tags.some(t => t.toLowerCase().includes(term))
       );
     }
-
     return filtered;
   }, [searchTerm, selectedCategory, showFavoritesOnly, preferences.favoriteTools, allResources]);
 
-  // 按分类组织资源
   const resourcesByCategory = useMemo(() => {
-    if (selectedCategory !== '全部') {
-      return { [selectedCategory]: filteredResources };
-    }
-
+    if (selectedCategory !== '全部') return { [selectedCategory]: filteredResources };
     const grouped: Record<string, AcademicResource[]> = {};
-    allCategories.forEach(category => {
-      const categoryResources = filteredResources.filter(resource => resource.category === category);
-      if (categoryResources.length > 0) {
-        grouped[category] = categoryResources;
-      }
+    allCategories.forEach(cat => {
+      const catResources = filteredResources.filter(r => r.category === cat);
+      if (catResources.length > 0) grouped[cat] = catResources;
     });
     return grouped;
   }, [filteredResources, selectedCategory]);
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="/" 
-                className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                <ArrowLeft className="h-5 w-5 mr-2" />
-                返回首页
-              </Link>
-              <div className="h-6 w-px bg-gray-300" />
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">🎓 学术中心</h1>
-                <p className="text-gray-600 mt-1">汇聚计算机科学领域的权威学术资源和研究工具</p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setIsAddModalOpen(true)}
-                className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                <span>添加自定义资源</span>
-              </button>
-
-              <div className="flex items-center space-x-4 text-sm text-gray-500">
-                <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-yellow-500" />
-                  <span>共 {allResources.length} 个资源</span>
-                  {customResources.length > 0 && (
-                    <span className="text-purple-600">({customResources.length} 个自定义)</span>
-                  )}
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Heart className="h-4 w-4 text-red-500" />
-                  <span>已收藏 {preferences.favoriteTools.filter(id => id.startsWith('academic-')).length} 个</span>
-                </div>
-              </div>
-            </div>
-          </div>
+  const headerActions = (
+    <>
+      <button
+        onClick={() => setIsAddModalOpen(true)}
+        className="flex items-center space-x-2 px-4 py-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors text-sm font-medium"
+      >
+        <Plus className="h-4 w-4" />
+        <span>添加自定义资源</span>
+      </button>
+      <div className="hidden sm:flex items-center space-x-4 text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center space-x-1">
+          <Star className="h-4 w-4 text-yellow-500" />
+          <span>共 {allResources.length} 个资源</span>
+          {customResources.length > 0 && (
+            <span className="text-purple-500">({customResources.length} 个自定义)</span>
+          )}
+        </div>
+        <div className="flex items-center space-x-1">
+          <Heart className="h-4 w-4 text-red-500" />
+          <span>已收藏 {preferences.favoriteTools.filter(id => id.startsWith('academic-')).length} 个</span>
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+      <ToolPageHeader
+        title="学术中心"
+        subtitle="汇聚计算机科学领域的权威学术资源和研究工具"
+        actions={headerActions}
+      />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* 搜索和筛选 */}
+        {/* Search and filters */}
         <div className="mb-8 space-y-4">
-          {/* 搜索框 */}
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <SearchBar
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
               placeholder="搜索学术资源、功能或标签..."
             />
-
-            {/* 收藏筛选按钮 */}
             <button
               onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors shrink-0 ${
                 showFavoritesOnly
-                  ? 'bg-red-500 text-white shadow-md'
-                  : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600'
               }`}
             >
               <Heart className={`h-4 w-4 ${showFavoritesOnly ? 'fill-current' : ''}`} />
               <span>{showFavoritesOnly ? '显示全部' : '仅显示收藏'}</span>
             </button>
           </div>
-
-          {/* 分类筛选 */}
           <CategoryFilter
             categories={['全部', ...allCategories]}
             selectedCategory={selectedCategory}
@@ -194,12 +141,12 @@ export default function AcademicCenterPage() {
           />
         </div>
 
-        {/* 搜索结果统计 */}
+        {/* Search stats */}
         {(searchTerm || selectedCategory !== '全部' || showFavoritesOnly) && (
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center space-x-2">
-              <GraduationCap className="h-5 w-5 text-blue-600" />
-              <span className="text-blue-800 font-medium">
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-900/30">
+            <div className="flex items-center space-x-2 text-blue-700 dark:text-blue-400 text-sm font-medium">
+              <GraduationCap className="h-4 w-4" />
+              <span>
                 {showFavoritesOnly && '收藏筛选 '}
                 {searchTerm && `搜索 "${searchTerm}" `}
                 {selectedCategory !== '全部' && `分类 "${selectedCategory}" `}
@@ -209,23 +156,21 @@ export default function AcademicCenterPage() {
           </div>
         )}
 
-        {/* 资源展示 */}
+        {/* Resource grid */}
         {Object.keys(resourcesByCategory).length > 0 ? (
           <div className="space-y-8">
             {Object.entries(resourcesByCategory).map(([category, resources]) => {
               if (resources.length === 0) return null;
-
               return (
                 <div key={category} className="space-y-4">
                   <div className="flex items-center space-x-3">
-                    <h2 className="text-xl font-bold text-gray-900">{category}</h2>
-                    <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full">
+                    <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{category}</h2>
+                    <span className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 text-xs font-medium px-2.5 py-0.5 rounded-full">
                       {resources.length} 个资源
                     </span>
                   </div>
-                  
                   <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    {resources.map((resource) => (
+                    {resources.map(resource => (
                       <AcademicResourceCard
                         key={resource.id}
                         resource={resource}
@@ -238,66 +183,39 @@ export default function AcademicCenterPage() {
             })}
           </div>
         ) : (
-          <div className="text-center py-12">
-            {showFavoritesOnly ? (
-              <>
-                <Heart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">还没有收藏的学术资源</h3>
-                <p className="text-gray-500 mb-4">
-                  点击资源卡片上的 ⭐ 按钮来收藏常用的学术资源
-                </p>
-                <button
-                  onClick={() => setShowFavoritesOnly(false)}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  浏览全部资源
-                </button>
-              </>
-            ) : (
-              <>
-                <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">未找到匹配的资源</h3>
-                <p className="text-gray-500">
-                  尝试调整搜索关键词或选择不同的分类
-                </p>
-              </>
-            )}
-          </div>
+          <EmptyState
+            icon={showFavoritesOnly ? Heart : GraduationCap}
+            title={showFavoritesOnly ? '还没有收藏的学术资源' : '未找到匹配的资源'}
+            description={showFavoritesOnly ? '点击资源卡片上的收藏按钮来收藏常用的学术资源' : '尝试调整搜索关键词或选择不同的分类'}
+            action={showFavoritesOnly ? (
+              <button
+                onClick={() => setShowFavoritesOnly(false)}
+                className="px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors text-sm font-medium"
+              >
+                浏览全部资源
+              </button>
+            ) : undefined}
+          />
         )}
 
-        {/* 底部说明 */}
-        <div className="mt-16 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
+        {/* Tips */}
+        <div className="mt-16 p-6 bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700">
           <div className="text-center">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">💡 使用提示</h3>
-            <div className="space-y-2 text-gray-600 text-sm leading-relaxed">
-              <p>
-                <strong>访问资源：</strong>点击"访问资源"按钮将在新窗口中打开对应的学术平台。
-              </p>
-              <p>
-                <strong>收藏功能：</strong>点击资源卡片右上角的 ⭐ 按钮收藏常用资源，使用"仅显示收藏"快速筛选。
-              </p>
-              <p>
-                <strong>访问说明：</strong>部分资源可能需要机构订阅或注册账号才能完整访问。
-              </p>
+            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-3">使用提示</h3>
+            <div className="space-y-2 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-2xl mx-auto">
+              <p><strong>访问资源：</strong>点击"访问资源"按钮将在新窗口中打开对应的学术平台。</p>
+              <p><strong>收藏功能：</strong>点击资源卡片右上角的收藏按钮收藏常用资源，使用"仅显示收藏"快速筛选。</p>
+              <p><strong>访问说明：</strong>部分资源可能需要机构订阅或注册账号才能完整访问。</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 弹窗组件 */}
-      <AddCustomResourceModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSuccess={handleAddSuccess}
-      />
-
+      <AddCustomResourceModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} onSuccess={handleAddSuccess} />
       <EditCustomResourceModal
         isOpen={isEditModalOpen}
         resourceId={editingResourceId}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setEditingResourceId(null);
-        }}
+        onClose={() => { setIsEditModalOpen(false); setEditingResourceId(null); }}
         onSuccess={handleEditSuccess}
       />
     </div>
