@@ -414,16 +414,16 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
         <div className="flex items-center space-x-4">
           <button
             onClick={onBack}
-            className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            className="flex items-center space-x-2 px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-600 dark:text-zinc-400 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
           >
             <Home className="h-4 w-4" />
             <span>返回</span>
           </button>
-          <h1 className="text-2xl font-bold text-gray-900">🧩 俄罗斯方块</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">俄罗斯方块</h1>
         </div>
         <button
           onClick={onSettings}
-          className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+          className="flex items-center space-x-2 px-4 py-2 border border-zinc-300 dark:border-zinc-600 text-zinc-600 dark:text-zinc-400 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-colors"
         >
           <Settings className="h-4 w-4" />
           <span>设置</span>
@@ -433,7 +433,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* 游戏区域 */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
             <div className="relative">
               <canvas
                 ref={canvasRef}
@@ -444,7 +444,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
               
               {/* 游戏状态覆盖层 */}
               {gameState.status !== 'playing' && (
-                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-lg">
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center rounded-lg">
                   <div className="text-center text-white">
                     {gameState.status === 'idle' && (
                       <div>
@@ -452,7 +452,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
                         <p className="mb-4">按任意键开始游戏</p>
                         <button
                           onClick={startGame}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                          className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 px-6 py-2 rounded-lg transition-colors"
                         >
                           开始游戏
                         </button>
@@ -463,7 +463,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
                         <h3 className="text-xl font-bold mb-2">游戏暂停</h3>
                         <button
                           onClick={togglePause}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                          className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 px-6 py-2 rounded-lg transition-colors"
                         >
                           继续游戏
                         </button>
@@ -475,7 +475,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
                         <p className="mb-4">得分: {gameState.score}</p>
                         <button
                           onClick={restartGame}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
+                          className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 px-6 py-2 rounded-lg transition-colors"
                         >
                           重新开始
                         </button>
@@ -491,7 +491,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
               {gameState.status === 'idle' && (
                 <button
                   onClick={startGame}
-                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center space-x-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 px-4 py-2 rounded-lg transition-colors"
                 >
                   <Play className="h-4 w-4" />
                   <span>开始</span>
@@ -500,7 +500,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
               {gameState.status === 'playing' && (
                 <button
                   onClick={togglePause}
-                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center space-x-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 px-4 py-2 rounded-lg transition-colors"
                 >
                   <Pause className="h-4 w-4" />
                   <span>暂停</span>
@@ -509,7 +509,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
               {gameState.status === 'paused' && (
                 <button
                   onClick={togglePause}
-                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center space-x-2 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 px-4 py-2 rounded-lg transition-colors"
                 >
                   <Play className="h-4 w-4" />
                   <span>继续</span>
@@ -517,7 +517,7 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
               )}
               <button
                 onClick={restartGame}
-                className="flex items-center space-x-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center space-x-2 bg-zinc-200 dark:bg-zinc-600 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-500 px-4 py-2 rounded-lg transition-colors"
               >
                 <RotateCcw className="h-4 w-4" />
                 <span>重新开始</span>
@@ -530,8 +530,8 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
         <div className="lg:col-span-2 space-y-6">
           {/* 下一个方块 */}
           {tetrisSettings.showNext && (
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">下一个方块</h3>
+            <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+              <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">下一个方块</h3>
               <div className="flex justify-center">
                 <canvas
                   ref={nextCanvasRef}
@@ -544,51 +544,51 @@ export default function Tetris({ onBack, onSettings }: TetrisProps) {
           )}
           
           {/* 游戏信息 */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">游戏信息</h3>
+          <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">游戏信息</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">分数:</span>
+                <span className="text-zinc-500 dark:text-zinc-400">分数:</span>
                 <span className="font-bold text-blue-600">{gameUtils.formatScore(gameState.score)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">消除行数:</span>
+                <span className="text-zinc-500 dark:text-zinc-400">消除行数:</span>
                 <span className="font-bold">{gameState.lines}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">等级:</span>
+                <span className="text-zinc-500 dark:text-zinc-400">等级:</span>
                 <span className="font-bold">{gameState.level}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">游戏时间:</span>
+                <span className="text-zinc-500 dark:text-zinc-400">游戏时间:</span>
                 <span className="font-mono">{gameUtils.formatTime(Math.floor(gameTime / 1000))}</span>
               </div>
             </div>
           </div>
           
           {/* 统计信息 */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">历史记录</h3>
+          <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">历史记录</h3>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">最高分:</span>
-                <span className="font-bold text-yellow-600">{gameUtils.formatScore(tetrisStats.bestScore)}</span>
+                <span className="text-zinc-500 dark:text-zinc-400">最高分:</span>
+                <span className="font-bold text-amber-500">{gameUtils.formatScore(tetrisStats.bestScore)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">游戏次数:</span>
+                <span className="text-zinc-500 dark:text-zinc-400">游戏次数:</span>
                 <span className="font-bold">{tetrisStats.gamesPlayed}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">总游戏时间:</span>
+                <span className="text-zinc-500 dark:text-zinc-400">总游戏时间:</span>
                 <span className="font-mono">{gameUtils.formatTime(tetrisStats.totalTime)}</span>
               </div>
             </div>
           </div>
           
           {/* 操作说明 */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">操作说明</h3>
-            <div className="space-y-2 text-sm text-gray-600">
+          <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">操作说明</h3>
+            <div className="space-y-2 text-sm text-zinc-500 dark:text-zinc-400">
               <div>• ←→ 左右移动方块</div>
               <div>• ↓ 加速下落</div>
               <div>• ↑ 旋转方块</div>

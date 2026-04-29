@@ -141,161 +141,273 @@ export const tetrisUtils = {
 };
 
 // 五子棋游戏工具函数
+const DIRECTIONS = [[0, 1], [1, 0], [1, 1], [1, -1]];
+
+// 棋型评分表：索引 = 连子数 * 2 + (两端开放 ? 0 : 1)
+// openEnds: 2=两端都空, 1=一端空一端堵, 0=两端都堵
+const SCORE_TABLE: Record<string, number> = {
+  '5_2': 1000000, '5_1': 1000000, '5_0': 1000000, // 五连
+  '4_2': 100000,  '4_1': 10000,   '4_0': 0,       // 活四/冲四/死四
+  '3_2': 10000,   '3_1': 1000,    '3_0': 0,       // 活三/眠三
+  '2_2': 1000,    '2_1': 100,     '2_0': 0,        // 活二/眠二
+  '1_2': 100,     '1_1': 10,      '1_0': 0,
+};
+
+function evaluateLine(board: GomokuPlayer[][], row: number, col: number, dx: number, dy: number, player: GomokuPlayer): number {
+  const size = board.length;
+  let count = 1;
+  let openEnds = 0;
+
+  // positive direction
+  let r = row + dx, c = col + dy;
+  while (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === player) {
+    count++;
+    r += dx;
+    c += dy;
+  }
+  if (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === null) openEnds++;
+
+  // negative direction
+  r = row - dx;
+  c = col - dy;
+  while (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === player) {
+    count++;
+    r -= dx;
+    c -= dy;
+  }
+  if (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === null) openEnds++;
+
+  const key = `${Math.min(count, 5)}_${openEnds}`;
+  return SCORE_TABLE[key] || 0;
+}
+
+function evaluateBoard(board: GomokuPlayer[][], player: GomokuPlayer): number {
+  const opponent = player === 'black' ? 'white' : 'black';
+  const size = board.length;
+  const visited = new Set<string>();
+  let score = 0;
+
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      const stone = board[row][col];
+      if (!stone) continue;
+      for (const [dx, dy] of DIRECTIONS) {
+        const key = `${row},${col},${dx},${dy}`;
+        if (visited.has(key)) continue;
+        // Mark all cells on this line as visited
+        let r = row, c = col;
+        while (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === stone) {
+          visited.add(`${r},${c},${dx},${dy}`);
+          r -= dx;
+          c -= dy;
+        }
+        r = row + dx;
+        c = col + dy;
+        while (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === stone) {
+          visited.add(`${r},${c},${dx},${dy}`);
+          r += dx;
+          c += dy;
+        }
+
+        const lineScore = evaluateLine(board, row, col, dx, dy, stone);
+        score += stone === player ? lineScore : -lineScore * 1.1; // 对手威胁权重略高（防守优先）
+      }
+    }
+  }
+  return score;
+}
+
+function getCandidateMoves(board: GomokuPlayer[][]): GomokuPosition[] {
+  const size = board.length;
+  const candidateSet = new Set<string>();
+  const moves: GomokuPosition[] = [];
+
+  // Find empty cells within 2 steps of any stone
+  for (let row = 0; row < size; row++) {
+    for (let col = 0; col < size; col++) {
+      if (board[row][col] === null) continue;
+      for (let dr = -2; dr <= 2; dr++) {
+        for (let dc = -2; dc <= 2; dc++) {
+          const nr = row + dr, nc = col + dc;
+          const k = `${nr},${nc}`;
+          if (nr >= 0 && nr < size && nc >= 0 && nc < size && board[nr][nc] === null && !candidateSet.has(k)) {
+            candidateSet.add(k);
+            moves.push({ row: nr, col: nc });
+          }
+        }
+      }
+    }
+  }
+
+  // If board is empty, play center
+  if (moves.length === 0) {
+    const center = Math.floor(size / 2);
+    moves.push({ row: center, col: center });
+  }
+  return moves;
+}
+
+function minimax(
+  board: GomokuPlayer[][],
+  depth: number,
+  alpha: number,
+  beta: number,
+  isMaximizing: boolean,
+  aiPlayer: GomokuPlayer,
+  currentPlayer: GomokuPlayer,
+): number {
+  if (depth === 0) {
+    return evaluateBoard(board, aiPlayer);
+  }
+
+  const opponent = aiPlayer === 'black' ? 'white' : 'black';
+
+  // Terminal check: immediate win/loss
+  // We check this via evaluateBoard returning very large scores
+  const baseScore = evaluateBoard(board, aiPlayer);
+  if (Math.abs(baseScore) >= 1000000) return baseScore;
+
+  const moves = getCandidateMoves(board);
+  if (moves.length === 0) return 0;
+
+  // Move ordering: evaluate each move quickly and sort by promise
+  const scoredMoves = moves.map(move => {
+    board[move.row][move.col] = currentPlayer;
+    const s = evaluateBoard(board, aiPlayer);
+    board[move.row][move.col] = null;
+    return { move, score: s };
+  });
+
+  if (isMaximizing) {
+    scoredMoves.sort((a, b) => b.score - a.score);
+  } else {
+    scoredMoves.sort((a, b) => a.score - b.score);
+  }
+
+  // Limit branching factor for performance
+  const maxBranches = depth >= 3 ? 15 : 25;
+  const topMoves = scoredMoves.slice(0, maxBranches);
+
+  if (isMaximizing) {
+    let maxEval = -Infinity;
+    for (const { move } of topMoves) {
+      board[move.row][move.col] = currentPlayer;
+      const nextPlayer = currentPlayer === 'black' ? 'white' : 'black';
+      const evalScore = minimax(board, depth - 1, alpha, beta, false, aiPlayer, nextPlayer);
+      board[move.row][move.col] = null;
+      maxEval = Math.max(maxEval, evalScore);
+      alpha = Math.max(alpha, evalScore);
+      if (beta <= alpha) break;
+    }
+    return maxEval;
+  } else {
+    let minEval = Infinity;
+    for (const { move } of topMoves) {
+      board[move.row][move.col] = currentPlayer;
+      const nextPlayer = currentPlayer === 'black' ? 'white' : 'black';
+      const evalScore = minimax(board, depth - 1, alpha, beta, true, aiPlayer, nextPlayer);
+      board[move.row][move.col] = null;
+      minEval = Math.min(minEval, evalScore);
+      beta = Math.min(beta, evalScore);
+      if (beta <= alpha) break;
+    }
+    return minEval;
+  }
+}
+
 export const gomokuUtils = {
-  // 检查是否获胜
-  checkWin: (
+  checkWin(
     board: GomokuPlayer[][],
     row: number,
     col: number,
-    player: GomokuPlayer
-  ): boolean => {
+    player: GomokuPlayer,
+  ): boolean {
     if (!player) return false;
-    
-    const directions = [
-      [0, 1],   // 水平
-      [1, 0],   // 垂直
-      [1, 1],   // 对角线
-      [1, -1]   // 反对角线
-    ];
-    
-    for (const [dx, dy] of directions) {
+    const size = board.length;
+
+    for (const [dx, dy] of DIRECTIONS) {
       let count = 1;
-      
-      // 向一个方向检查
       for (let i = 1; i < 5; i++) {
-        const newRow = row + dx * i;
-        const newCol = col + dy * i;
-        if (
-          newRow >= 0 &&
-          newRow < board.length &&
-          newCol >= 0 &&
-          newCol < board[0].length &&
-          board[newRow][newCol] === player
-        ) {
-          count++;
-        } else {
-          break;
-        }
+        const r = row + dx * i, c = col + dy * i;
+        if (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === player) count++;
+        else break;
       }
-      
-      // 向相反方向检查
       for (let i = 1; i < 5; i++) {
-        const newRow = row - dx * i;
-        const newCol = col - dy * i;
-        if (
-          newRow >= 0 &&
-          newRow < board.length &&
-          newCol >= 0 &&
-          newCol < board[0].length &&
-          board[newRow][newCol] === player
-        ) {
-          count++;
-        } else {
-          break;
-        }
+        const r = row - dx * i, c = col - dy * i;
+        if (r >= 0 && r < size && c >= 0 && c < size && board[r][c] === player) count++;
+        else break;
       }
-      
       if (count >= 5) return true;
     }
-    
     return false;
   },
-  
-  // 简单AI：寻找最佳落子位置
-  findBestMove: (
+
+  findBestMove(
     board: GomokuPlayer[][],
     player: GomokuPlayer,
-    difficulty: 'easy' | 'medium' | 'hard'
-  ): GomokuPosition | null => {
+    difficulty: 'easy' | 'medium' | 'hard',
+  ): GomokuPosition | null {
     const opponent = player === 'black' ? 'white' : 'black';
-    const boardSize = board.length;
-    
-    // 检查是否可以获胜
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        if (board[row][col] === null) {
-          board[row][col] = player;
-          if (gomokuUtils.checkWin(board, row, col, player)) {
-            board[row][col] = null;
-            return { row, col };
-          }
-          board[row][col] = null;
+    const size = board.length;
+
+    // Immediate win
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (board[r][c] === null) {
+          board[r][c] = player;
+          if (gomokuUtils.checkWin(board, r, c, player)) { board[r][c] = null; return { row: r, col: c }; }
+          board[r][c] = null;
         }
       }
     }
-    
-    // 检查是否需要阻止对手获胜
-    if (difficulty !== 'easy') {
-      for (let row = 0; row < boardSize; row++) {
-        for (let col = 0; col < boardSize; col++) {
-          if (board[row][col] === null) {
-            board[row][col] = opponent;
-            if (gomokuUtils.checkWin(board, row, col, opponent)) {
-              board[row][col] = null;
-              return { row, col };
-            }
-            board[row][col] = null;
-          }
+
+    // Block opponent's immediate win
+    for (let r = 0; r < size; r++) {
+      for (let c = 0; c < size; c++) {
+        if (board[r][c] === null) {
+          board[r][c] = opponent;
+          if (gomokuUtils.checkWin(board, r, c, opponent)) { board[r][c] = null; return { row: r, col: c }; }
+          board[r][c] = null;
         }
       }
     }
-    
-    // 简单策略：在已有棋子附近落子
-    const moves: GomokuPosition[] = [];
-    for (let row = 0; row < boardSize; row++) {
-      for (let col = 0; col < boardSize; col++) {
-        if (board[row][col] === null) {
-          // 检查周围是否有棋子
-          let hasNeighbor = false;
-          for (let dx = -1; dx <= 1; dx++) {
-            for (let dy = -1; dy <= 1; dy++) {
-              const newRow = row + dx;
-              const newCol = col + dy;
-              if (
-                newRow >= 0 &&
-                newRow < boardSize &&
-                newCol >= 0 &&
-                newCol < boardSize &&
-                board[newRow][newCol] !== null
-              ) {
-                hasNeighbor = true;
-                break;
-              }
-            }
-            if (hasNeighbor) break;
-          }
-          if (hasNeighbor) {
-            moves.push({ row, col });
-          }
-        }
+
+    // Easy: random near existing stones
+    if (difficulty === 'easy') {
+      const moves = getCandidateMoves(board);
+      return moves[Math.floor(Math.random() * moves.length)] || null;
+    }
+
+    // Medium/Hard: Minimax with alpha-beta
+    const depth = difficulty === 'hard' ? 4 : 2;
+    const candidates = getCandidateMoves(board);
+    if (candidates.length === 0) return null;
+
+    let bestScore = -Infinity;
+    let bestMove = candidates[0];
+
+    // Score & sort candidates for better pruning
+    const scored = candidates.map(move => {
+      board[move.row][move.col] = player;
+      const s = evaluateBoard(board, player);
+      board[move.row][move.col] = null;
+      return { move, score: s };
+    });
+    scored.sort((a, b) => b.score - a.score);
+
+    const topN = difficulty === 'hard' ? 20 : 15;
+    for (const { move } of scored.slice(0, topN)) {
+      board[move.row][move.col] = player;
+      const evalScore = minimax(board, depth - 1, -Infinity, Infinity, false, player, opponent);
+      board[move.row][move.col] = null;
+      if (evalScore > bestScore) {
+        bestScore = evalScore;
+        bestMove = move;
       }
     }
-    
-    // 如果没有邻近的位置，选择中心附近
-    if (moves.length === 0) {
-      const center = Math.floor(boardSize / 2);
-      for (let offset = 0; offset < 3; offset++) {
-        for (let dx = -offset; dx <= offset; dx++) {
-          for (let dy = -offset; dy <= offset; dy++) {
-            const row = center + dx;
-            const col = center + dy;
-            if (
-              row >= 0 &&
-              row < boardSize &&
-              col >= 0 &&
-              col < boardSize &&
-              board[row][col] === null
-            ) {
-              moves.push({ row, col });
-            }
-          }
-        }
-        if (moves.length > 0) break;
-      }
-    }
-    
-    return moves.length > 0 ? moves[Math.floor(Math.random() * moves.length)] : null;
-  }
+
+    return bestMove;
+  },
 };
 
 // 通用工具函数
