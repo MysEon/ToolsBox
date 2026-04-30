@@ -58,6 +58,17 @@ export const tools: Tool[] = [
     color: 'from-purple-500 to-pink-600'
   },
   {
+    id: 'spongebob-test',
+    name: '🧽 海绵宝宝人格测试',
+    description: '18道灵魂拷问，测测你是海绵宝宝里的谁，内含15种稀有度角色结果和分享卡片',
+    icon: Gamepad2,
+    href: '/spongebob-test/',
+    status: 'active',
+    category: '娱乐工具',
+    features: ['18道题目', '15种角色', '稀有度系统', '分享卡片', '彩带特效'],
+    color: 'from-yellow-400 to-orange-500'
+  },
+  {
     id: 'academic-center',
     name: '🎓 学术中心',
     description: '汇聚计算机科学领域的权威学术资源，包含DBLP、Google Scholar、LetPub等30+学术平台',
