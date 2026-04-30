@@ -952,7 +952,10 @@ function showQuestion() {
 }
 
 function showResult() {
-  const key = getWeightedResult(scores);
+  // Check for forced result via URL parameter: ?force=spongebob
+  const params = new URLSearchParams(window.location.search);
+  const forcedKey = params.get('force');
+  const key = (forcedKey && results[forcedKey]) ? forcedKey : getWeightedResult(scores);
   const r = results[key];
 
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
