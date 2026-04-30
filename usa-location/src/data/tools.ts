@@ -1,4 +1,4 @@
-import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap } from 'lucide-react';
+import { LucideIcon, Globe, MapPin, Calculator, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap, ImageDown } from 'lucide-react';
 
 export interface Tool {
   id: string;
@@ -67,6 +67,17 @@ export const tools: Tool[] = [
     category: '娱乐工具',
     features: ['18道题目', '15种角色', '稀有度系统', '分享卡片', '彩带特效'],
     color: 'from-yellow-400 to-orange-500'
+  },
+  {
+    id: 'image-compressor',
+    name: '🖼️ 图片压缩工具',
+    description: '在线压缩图片大小，支持 JPG/PNG/WebP 格式转换，可调整质量和输出尺寸，所有处理均在本地完成',
+    icon: ImageDown,
+    href: '/image-compressor/',
+    status: 'active',
+    category: '图像工具',
+    features: ['质量调节', '尺寸调整', '格式转换', '拖拽上传', '本地处理'],
+    color: 'from-blue-400 to-purple-500'
   },
   {
     id: 'academic-center',

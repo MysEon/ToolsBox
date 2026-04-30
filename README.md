@@ -14,6 +14,14 @@ Developed By AI
   - 纯前端单页应用，无需后端
   - 在线体验：https://so7rry.github.io/spongebob-test/
 
+- **🖼️ 图片压缩工具**: 在线压缩图片大小，支持多种格式和质量/尺寸调节
+  - 拖拽上传或点击选择图片
+  - 滑块调节压缩质量，支持实时预览压缩效果
+  - 支持调整输出尺寸（最大宽度）
+  - 支持 JPEG / PNG / WebP 格式输出
+  - 显示压缩前后大小对比和缩小比例
+  - 所有处理在浏览器本地完成，不上传服务器
+
 - **🇺🇸 美国虚拟身份生成器**: 生成真实格式的美国地址和完整虚构个人信息
   - 真实地址格式生成
   - 完整个人档案信息
@@ -129,6 +137,8 @@ open http://localhost:3001
 ```
 ToolsBox/
 ├── .github/workflows/deploy.yml    # GitHub Actions部署配置
+├── image-compressor/               # 图片压缩工具（单页HTML）
+│   └── index.html                  # 完整网页应用
 ├── spongebob-test/                 # 海绵宝宝人格测试（单页HTML）
 │   └── index.html                  # 完整网页应用
 ├── usa-location/                   # Next.js应用
