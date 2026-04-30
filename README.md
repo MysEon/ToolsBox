@@ -7,6 +7,13 @@ Developed By AI
 ## ✨ 工具列表
 
 ### 🟢 可用工具
+- **🧽 海绵宝宝人格测试**: 18道灵魂拷问，测测你是海绵宝宝里的谁
+  - 18道趣味选择题，15种角色结果（SSR/SR/R/N/C/D稀有度系统）
+  - 每个角色附带详细的日常、恐惧、盟友和身价评估
+  - 分享卡片生成，彩带/金光特效
+  - 纯前端单页应用，无需后端
+  - 在线体验：https://so7rry.github.io/spongebob-test/
+
 - **🇺🇸 美国虚拟身份生成器**: 生成真实格式的美国地址和完整虚构个人信息
   - 真实地址格式生成
   - 完整个人档案信息
@@ -122,6 +129,8 @@ open http://localhost:3001
 ```
 ToolsBox/
 ├── .github/workflows/deploy.yml    # GitHub Actions部署配置
+├── spongebob-test/                 # 海绵宝宝人格测试（单页HTML）
+│   └── index.html                  # 完整网页应用
 ├── usa-location/                   # Next.js应用
 │   ├── src/                        # 源代码
 │   │   ├── app/                    # 页面路由
