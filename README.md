@@ -147,12 +147,10 @@ ToolsBox/
 │       │       └── academic-center/# 学术中心
 │       ├── docs/                   # 应用级架构文档
 │       ├── public/                 # 静态资源
+│       │   ├── spongebob-test/     # 海绵宝宝人格测试（单页 HTML）
+│       │   └── image-compressor/   # 图片压缩工具（单页 HTML）
 │       ├── package.json            # Web 应用依赖
 │       └── next.config.ts          # Next.js 配置
-├── image-compressor/               # 图片压缩工具（单页 HTML）
-│   └── index.html                  # 完整网页应用
-├── spongebob-test/                 # 海绵宝宝人格测试（单页 HTML）
-│   └── index.html                  # 完整网页应用
 ├── DEPLOYMENT.md                   # 部署指南
 ├── package.json                    # Monorepo 入口脚本
 └── README.md                       # 项目说明

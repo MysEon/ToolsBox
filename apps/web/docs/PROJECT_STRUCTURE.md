@@ -5,24 +5,28 @@ The Web application lives at `apps/web`. It uses the Next.js App Router with a f
 ## Directory Layout
 
 ```text
-src/
-├── app/                    # Next.js routes, layouts, and route-level composition
-│   ├── page.tsx            # Toolbox home page
-│   └── tools/              # Tool route entry points
-├── shared/                 # Cross-feature application layer
-│   ├── components/         # Reusable UI components
-│   ├── contexts/           # React context providers
-│   ├── data/               # Shared catalog/configuration data
-│   ├── hooks/              # Reusable React hooks
-│   ├── services/           # Cross-cutting client services and API adapters
-│   ├── types/              # Shared TypeScript contracts
-│   └── utils/              # Pure utilities and browser storage helpers
-└── tools/                  # Feature modules for each toolbox item
-    ├── academic-center/
-    ├── crypto-tool/
-    ├── dev-tools/
-    ├── mini-games/
-    └── usa-identity/
+apps/web/
+├── public/                 # Static assets copied as-is to exported output
+│   ├── image-compressor/   # Standalone HTML tool exposed at /image-compressor/
+│   └── spongebob-test/     # Standalone HTML tool exposed at /spongebob-test/
+└── src/
+    ├── app/                # Next.js routes, layouts, and route-level composition
+    │   ├── page.tsx        # Toolbox home page
+    │   └── tools/          # Tool route entry points
+    ├── shared/             # Cross-feature application layer
+    │   ├── components/     # Reusable UI components
+    │   ├── contexts/       # React context providers
+    │   ├── data/           # Shared catalog/configuration data
+    │   ├── hooks/          # Reusable React hooks
+    │   ├── services/       # Cross-cutting client services and API adapters
+    │   ├── types/          # Shared TypeScript contracts
+    │   └── utils/          # Pure utilities and browser storage helpers
+    └── tools/              # Feature modules for each toolbox item
+        ├── academic-center/
+        ├── crypto-tool/
+        ├── dev-tools/
+        ├── mini-games/
+        └── usa-identity/
 ```
 
 ## Architectural Rules
@@ -49,6 +53,11 @@ src/
    - `types/`: feature-specific TypeScript types
    - `utils/`: feature-only utilities and storage helpers
    - `context/` or `hooks/`: feature state when needed
+
+6. **Standalone HTML tools live in `public/`**
+   - Self-contained single-page tools (no React/Next.js) belong in `public/<tool-id>/index.html`.
+   - They are served at `/<tool-id>/` in production with zero routing configuration.
+   - If a standalone tool later needs React integration, promote it to `src/tools/<tool-id>` and add an `app/tools/<tool-id>/page.tsx` route.
 
 ## Current Refactor Notes
 
