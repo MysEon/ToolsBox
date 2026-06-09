@@ -1,4 +1,4 @@
-import { Globe, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap, ImageDown } from 'lucide-react';
+import { Globe, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap, ImageDown, FileStack } from 'lucide-react';
 import NintendoIcon from '@/shared/components/icons/NintendoIcon';
 import type { ComponentType } from 'react';
 
@@ -146,6 +146,17 @@ export const tools: Tool[] = [
     category: '实用工具',
     features: ['北美官网', '日本官网', '欧洲官网', '港区官网', '多区域支持'],
     color: 'from-red-500 to-red-700'
+  },
+  {
+    id: 'ilovepdf',
+    name: 'iLovePDF 在线 PDF 工具',
+    description: '快速访问 iLovePDF 中文站，合并、拆分、压缩、转换、编辑 PDF 等常用文档处理功能',
+    icon: FileStack,
+    href: 'https://www.ilovepdf.com/zh-cn',
+    status: 'active',
+    category: '实用工具',
+    features: ['PDF 合并', 'PDF 压缩', '格式转换', 'PDF 编辑', '在线处理'],
+    color: 'from-rose-500 to-red-600'
   },
   {
     id: 'qr-generator',

@@ -92,6 +92,12 @@ export default function Home() {
 
   const handleToolSelect = (result: any) => {
     recordToolUsage(result.id);
+
+    if (/^https?:\/\//.test(result.href)) {
+      window.open(result.href, '_blank', 'noopener,noreferrer');
+      return;
+    }
+
     router.push(result.href);
   };
 

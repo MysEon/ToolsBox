@@ -112,6 +112,16 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
   );
 
   if (tool.status === 'active') {
+    const isExternal = /^https?:\/\//.test(tool.href);
+
+    if (isExternal) {
+      return (
+        <a href={tool.href} target="_blank" rel="noopener noreferrer" className="block" onClick={handleClick}>
+          <CardContent />
+        </a>
+      );
+    }
+
     return (
       <Link href={tool.href} className="block" onClick={handleClick}>
         <CardContent />
