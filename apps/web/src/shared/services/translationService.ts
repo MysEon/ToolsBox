@@ -78,7 +78,7 @@ class TranslationService {
 
     // 检查缓存
     if (enableCache) {
-      const cached = sourceLang !== 'auto' ? this.getCachedTranslation(text, sourceLang, targetLang, cacheExpiry) : null;
+      const cached = this.getCachedTranslation(text, sourceLang, targetLang, cacheExpiry);
       if (cached) {
         return {
           translatedText: cached.translatedText,
@@ -92,12 +92,12 @@ class TranslationService {
       // 调用 DeepLX API
       const response = await this.callDeepLXAPI(text, sourceLang, targetLang, apiKey);
       
-      // 缓存结果
+      // 缓存结果。使用请求时的 sourceLang 作为缓存 key，使 auto 源语言也能命中缓存。
       if (enableCache && response.translatedText && !response.error) {
         this.setCachedTranslation({
           originalText: text,
           translatedText: response.translatedText,
-          sourceLang: response.sourceLang,
+          sourceLang: sourceLang,
           targetLang: response.targetLang,
           timestamp: Date.now()
         });
@@ -164,7 +164,7 @@ class TranslationService {
    */
   private getCachedTranslation(
     text: string,
-    sourceLang: SupportedLanguage,
+    sourceLang: SourceLanguage,
     targetLang: SupportedLanguage,
     cacheExpiry: number
   ): CachedTranslation | null {
@@ -194,8 +194,8 @@ class TranslationService {
   private setCachedTranslation(translation: CachedTranslation): void {
     const cacheKey = this.generateCacheKey(
       translation.originalText,
-      translation.sourceLang as SupportedLanguage,
-      translation.targetLang as SupportedLanguage
+      translation.sourceLang,
+      translation.targetLang
     );
 
     this.cache.set(cacheKey, translation);
@@ -215,7 +215,7 @@ class TranslationService {
   /**
    * 生成缓存键
    */
-  private generateCacheKey(text: string, sourceLang: SupportedLanguage, targetLang: SupportedLanguage): string {
+  private generateCacheKey(text: string, sourceLang: SourceLanguage | string, targetLang: SupportedLanguage | string): string {
     return `${sourceLang}-${targetLang}-${btoa(encodeURIComponent(text.trim()))}`;
   }
 

@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import Header from '@/shared/components/Header';
 import ToolCard from '@/shared/components/ToolCard';
-import SidebarNewsPanel from '@/shared/components/SidebarNewsPanel';
 import { NewToolNotification } from '@/shared/components/NewToolNotification';
 import { EnhancedSearch } from '@/shared/components/EnhancedSearch';
 import { FavoriteToolsList } from '@/shared/components/FavoriteButton';
@@ -32,6 +32,11 @@ import {
   Languages,
   Search as SearchIcon,
 } from 'lucide-react';
+
+const SidebarNewsPanel = dynamic(
+  () => import('@/shared/components/SidebarNewsPanel'),
+  { ssr: false, loading: () => null }
+);
 
 // Predefined grid classes — avoids JIT-breaking dynamic class generation
 const gridColClasses: Record<string, string> = {
