@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './ThemeToggle';
 import SearchBar, { MobileSearchButton } from './SearchBar';
-import { ArrowLeft, Menu, X, Github, Wrench } from 'lucide-react';
+import ToolsBoxMark from './icons/ToolsBoxMark';
+import { ArrowLeft, Menu, X, Github } from 'lucide-react';
 
 interface HeaderProps {
   showBackButton?: boolean;
@@ -48,12 +49,10 @@ export default function Header({
             )}
 
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-emerald-500">
-                <Wrench className="h-4 w-4 text-white" />
-              </div>
+              <ToolsBoxMark size={32} className="shrink-0" />
               <div className="hidden sm:block">
                 <span className="text-sm font-semibold text-[var(--tb-text)]">
-                  {title || '开发者工具箱'}
+                  {title || 'ToolsBox'}
                 </span>
                 {subtitle && (
                   <span className="text-xs text-[var(--tb-text-muted)] ml-2">{subtitle}</span>
