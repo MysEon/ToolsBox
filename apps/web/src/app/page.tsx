@@ -108,7 +108,12 @@ export default function Home() {
     }),
   });
 
+  const favoriteToolIds = preferences.favoriteTools;
+  const favoriteTools = tools.filter(tool => favoriteToolIds.includes(tool.id) && tool.status === 'active');
   const activeTools = filteredTools.filter(tool => tool.status === 'active');
+  const visibleActiveTools = isSearching
+    ? activeTools
+    : activeTools.filter(tool => !favoriteToolIds.includes(tool.id));
   const comingSoonTools = filteredTools.filter(tool => tool.status === 'coming-soon');
   const hasSearchResults = filteredTools.length > 0;
 
@@ -129,63 +134,49 @@ export default function Home() {
       <SidebarNewsPanel maxItems={15} />
 
       <main className={containerClasses[density] || containerClasses.standard}>
-        {/* Welcome + Search */}
-        <div className="mb-12 pt-8 pb-4">
-          <div className="max-w-2xl mx-auto text-center">
-            {/* Kicker */}
-            <div className="tb-section-kicker mb-4">
-              TOOLSBOX · LOCAL-FIRST · FREE
-            </div>
+        {/* Compact command bar */}
+        <div className="mb-8 pt-5">
+          <div className="tb-glass-strong rounded-3xl px-4 py-4 sm:px-5">
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="min-w-0 xl:max-w-md">
+                <div className="tb-section-kicker mb-2">
+                  TOOLSBOX · LOCAL-FIRST · FREE
+                </div>
+                <h1 className="tb-gradient-text text-2xl sm:text-3xl font-bold tracking-tight">
+                  开发者工具箱
+                </h1>
+                <p className="mt-1 text-sm text-[var(--tb-text-muted)] leading-relaxed">
+                  {tools.filter(t => t.status === 'active').length} 个可用工具 · {categories.length} 个分类 · 本地优先
+                </p>
+              </div>
 
-            {/* Headline */}
-            <h1 className="tb-gradient-text text-4xl sm:text-5xl font-bold tracking-tight mb-3">
-              开发者工具箱
-            </h1>
+              <div className="flex-1 xl:max-w-xl">
+                <SearchBar
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  suggestions={searchSuggestions}
+                  placeholder="搜索工具、分类、功能..."
+                />
+              </div>
 
-            {/* Subtitle */}
-            <p className="text-[var(--tb-text-muted)] text-base max-w-md mx-auto leading-relaxed mb-6">
-              集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
-            </p>
-
-            {/* Stats row */}
-            <div className="flex justify-center gap-6 mb-8 text-sm">
-              <span className="text-[var(--tb-text-muted)]">
-                <span className="text-[var(--tb-accent)] font-semibold">{tools.filter(t => t.status === 'active').length}</span> 可用工具
-              </span>
-              <span className="text-[var(--tb-text-muted)]">
-                <span className="text-[var(--tb-accent)] font-semibold">{categories.length}</span> 个分类
-              </span>
-              <span className="text-[var(--tb-text-muted)]">
-                本地优先 · <span className="text-[var(--tb-accent-2)]">完全免费</span>
-              </span>
-            </div>
-
-            {/* Search */}
-            <SearchBar
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              suggestions={searchSuggestions}
-              placeholder="搜索工具、分类、功能..."
-            />
-
-            {/* Toolbar */}
-            <div className="flex justify-center gap-1 mt-4">
-              <button
-                onClick={() => setIsTranslationSettingsOpen(true)}
-                className="tb-toolbar-btn"
-              >
-                <Languages className="h-3.5 w-3.5" />
-                <span>翻译</span>
-              </button>
-              <button
-                onClick={() => setIsStorageManagerOpen(true)}
-                className="tb-toolbar-btn"
-              >
-                <Database className="h-3.5 w-3.5" />
-                <span>存储</span>
-              </button>
-              <div className="tb-toolbar-btn">
-                <LayoutSettingsButton onClick={() => setIsLayoutSettingsOpen(true)} />
+              <div className="flex shrink-0 items-center gap-1 xl:justify-end">
+                <button
+                  onClick={() => setIsTranslationSettingsOpen(true)}
+                  className="tb-toolbar-btn"
+                >
+                  <Languages className="h-3.5 w-3.5" />
+                  <span>翻译</span>
+                </button>
+                <button
+                  onClick={() => setIsStorageManagerOpen(true)}
+                  className="tb-toolbar-btn"
+                >
+                  <Database className="h-3.5 w-3.5" />
+                  <span>存储</span>
+                </button>
+                <div className="tb-toolbar-btn">
+                  <LayoutSettingsButton onClick={() => setIsLayoutSettingsOpen(true)} />
+                </div>
               </div>
             </div>
           </div>
@@ -286,7 +277,28 @@ export default function Home() {
         {/* Tool grid */}
         {!isSearching || hasSearchResults ? (
           <div className={spacingClasses[density] || spacingClasses.standard}>
-            {activeTools.length > 0 && (
+            {!isSearching && favoriteTools.length > 0 && (
+              <section>
+                <div className="flex items-center mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-2 bg-[var(--tb-glow)] rounded-lg">
+                      <Heart className="h-5 w-5 text-[var(--tb-accent)]" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold text-[var(--tb-text)]">收藏工具</h2>
+                      <p className="text-sm text-[var(--tb-text-muted)]">优先展示您常用的工具</p>
+                    </div>
+                  </div>
+                </div>
+                <div className={gridClass}>
+                  {favoriteTools.map(tool => (
+                    <ToolCard key={tool.id} tool={tool} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {visibleActiveTools.length > 0 && (
               <section>
                 <div className="flex items-center mb-6">
                   <div className="flex items-center space-x-3">
@@ -298,13 +310,13 @@ export default function Home() {
                         {isSearching ? '搜索结果' : '可用工具'}
                       </h2>
                       <p className="text-sm text-[var(--tb-text-muted)]">
-                        {isSearching ? `找到 ${activeTools.length} 个可用工具` : '立即使用这些强大的工具'}
+                        {isSearching ? `找到 ${visibleActiveTools.length} 个可用工具` : '立即使用这些强大的工具'}
                       </p>
                     </div>
                   </div>
                 </div>
                 <div className={gridClass}>
-                  {activeTools.map(tool => (
+                  {visibleActiveTools.map(tool => (
                     <ToolCard key={tool.id} tool={tool} />
                   ))}
                 </div>
