@@ -36,7 +36,7 @@ export default function DevToolsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen tb-app-bg">
       <ToolPageHeader
         title="编程软件下载中心"
         subtitle="汇聚常见编程开发工具的官方下载地址和安装教程"

@@ -106,7 +106,7 @@ export default function AcademicCenterPage() {
   );
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen tb-app-bg">
       <ToolPageHeader
         title="学术中心"
         subtitle="汇聚计算机科学领域的权威学术资源和研究工具"

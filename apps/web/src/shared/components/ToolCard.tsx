@@ -25,9 +25,9 @@ const gapMap: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  active: 'bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400',
-  beta: 'bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400',
-  'coming-soon': 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
+  active: 'tb-pill tb-badge-active',
+  beta: 'tb-pill tb-badge-beta',
+  'coming-soon': 'tb-pill tb-badge-coming',
 };
 
 const statusTexts: Record<string, string> = {
@@ -49,12 +49,14 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
 
   const CardContent = () => (
     <div
-      className={`group relative bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600 hover:shadow-md transition-all duration-200 ${className}`}
+      className={`group relative overflow-hidden rounded-2xl tb-card transition-all duration-200 ${className}`}
     >
+      <div className={`absolute -top-12 -right-12 w-32 h-32 bg-gradient-to-br ${tool.color} opacity-[0.07] group-hover:opacity-[0.12] blur-2xl transition-opacity`} />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--tb-accent)] to-transparent opacity-40 group-hover:opacity-80 transition-opacity" />
       <div className={padding}>
         {/* Header: icon + favorite */}
         <div className={`flex items-start justify-between ${gap}`}>
-          <div className={`p-2.5 rounded-lg bg-gradient-to-r ${tool.color} text-white`}>
+          <div className={`p-3 rounded-xl bg-gradient-to-br ${tool.color} text-white shadow-lg shadow-black/5`}>
             <tool.icon className="h-5 w-5" />
           </div>
           <FavoriteButton toolId={tool.id} size="sm" />
@@ -62,10 +64,10 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
 
         {/* Title + description */}
         <div className={gap}>
-          <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-1.5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <h3 className="text-base font-semibold text-[var(--tb-text)] mb-1.5 group-hover:text-[var(--tb-accent)] transition-colors">
             {tool.name}
           </h3>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed line-clamp-2">
+          <p className="text-sm text-[var(--tb-text-muted)] leading-relaxed line-clamp-2">
             {tool.description}
           </p>
         </div>
@@ -82,12 +84,12 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
           <div className="mb-3">
             <div className="flex flex-wrap gap-1">
               {tool.features.slice(0, 3).map((feature, index) => (
-                <span key={index} className="inline-block px-2 py-0.5 bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400 text-xs rounded">
+                <span key={index} className="inline-block px-2 py-0.5 rounded-md text-xs bg-[var(--tb-bg-soft)] text-[var(--tb-text-muted)] border border-[var(--tb-border)]">
                   {feature}
                 </span>
               ))}
               {tool.features.length > 3 && (
-                <span className="inline-block px-2 py-0.5 text-zinc-400 dark:text-zinc-500 text-xs">
+                <span className="inline-block px-2 py-0.5 text-[var(--tb-text-muted)] text-xs">
                   +{tool.features.length - 3}
                 </span>
               )}
@@ -97,10 +99,10 @@ export default function ToolCard({ tool, className = '' }: ToolCardProps) {
 
         {/* Action */}
         <div className="flex items-center justify-between pt-1">
-          <span className="text-xs text-zinc-400 dark:text-zinc-500">
+          <span className="text-xs text-[var(--tb-text-muted)]">
             {tool.status === 'active' ? '立即使用' : '敬请期待'}
           </span>
-          <span className="inline-flex items-center text-sm font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          <span className="inline-flex items-center text-sm font-medium text-[var(--tb-text)] group-hover:text-[var(--tb-accent)] transition-colors">
             {tool.status === 'active' ? '进入工具' : '了解更多'}
             <ArrowRight className="h-3.5 w-3.5 ml-1 group-hover:translate-x-0.5 transition-transform" />
           </span>

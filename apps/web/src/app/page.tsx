@@ -21,7 +21,6 @@ import { useKeyboardShortcuts, createDefaultShortcuts } from '@/shared/hooks/use
 import { tools, categories } from '@/shared/data/tools';
 import { searchTools, getSearchSuggestions } from '@/shared/utils/searchUtils';
 import {
-  Wrench,
   TrendingUp,
   Star,
   Users,
@@ -112,7 +111,8 @@ export default function Home() {
   const gridClass = gridColClasses[gridKey] || gridColClasses.standard_auto;
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 transition-colors duration-200">
+    <div className="min-h-screen tb-app-bg transition-colors duration-300 relative">
+      <div className="tb-atmosphere" aria-hidden="true" />
       <Header
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -125,18 +125,33 @@ export default function Home() {
       <main className={containerClasses[density] || containerClasses.standard}>
         {/* Welcome + Search */}
         <div className="mb-12 pt-8 pb-4">
-          <div className="max-w-2xl mx-auto">
-            {/* Icon + Title */}
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-zinc-900 dark:bg-zinc-100 mb-5 shadow-sm">
-                <Wrench className="h-7 w-7 text-white dark:text-zinc-900" />
-              </div>
-              <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-3">
-                开发者工具箱
-              </h1>
-              <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
-                集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
-              </p>
+          <div className="max-w-2xl mx-auto text-center">
+            {/* Kicker */}
+            <div className="tb-section-kicker mb-4">
+              TOOLSBOX · LOCAL-FIRST · FREE
+            </div>
+
+            {/* Headline */}
+            <h1 className="tb-gradient-text text-4xl sm:text-5xl font-bold tracking-tight mb-3">
+              开发者工具箱
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-[var(--tb-text-muted)] text-base max-w-md mx-auto leading-relaxed mb-6">
+              集成多种实用开发工具的现代化工具集合，为开发者和创作者提供高效便捷的解决方案
+            </p>
+
+            {/* Stats row */}
+            <div className="flex justify-center gap-6 mb-8 text-sm">
+              <span className="text-[var(--tb-text-muted)]">
+                <span className="text-[var(--tb-accent)] font-semibold">{tools.filter(t => t.status === 'active').length}</span> 可用工具
+              </span>
+              <span className="text-[var(--tb-text-muted)]">
+                <span className="text-[var(--tb-accent)] font-semibold">{categories.length}</span> 个分类
+              </span>
+              <span className="text-[var(--tb-text-muted)]">
+                本地优先 · <span className="text-[var(--tb-accent-2)]">完全免费</span>
+              </span>
             </div>
 
             {/* Search */}
@@ -151,19 +166,19 @@ export default function Home() {
             <div className="flex justify-center gap-1 mt-4">
               <button
                 onClick={() => setIsTranslationSettingsOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
+                className="tb-toolbar-btn"
               >
                 <Languages className="h-3.5 w-3.5" />
                 <span>翻译</span>
               </button>
               <button
                 onClick={() => setIsStorageManagerOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
+                className="tb-toolbar-btn"
               >
                 <Database className="h-3.5 w-3.5" />
                 <span>存储</span>
               </button>
-              <div className="text-zinc-400 dark:text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors">
+              <div className="tb-toolbar-btn">
                 <LayoutSettingsButton onClick={() => setIsLayoutSettingsOpen(true)} />
               </div>
             </div>
@@ -174,35 +189,23 @@ export default function Home() {
         {!isSearching && (
           <div className="mb-8">
             <div className="flex justify-center mb-6">
-              <div className="inline-flex bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg p-1">
+              <div className="tb-segmented">
                 <button
                   onClick={() => setActiveSection('all')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeSection === 'all'
-                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                      : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
-                  }`}
+                  className={`tb-segmented-item ${activeSection === 'all' ? 'active' : ''}`}
                 >
                   全部工具
                 </button>
                 <button
                   onClick={() => setActiveSection('favorites')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
-                    activeSection === 'favorites'
-                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                      : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
-                  }`}
+                  className={`tb-segmented-item flex items-center space-x-1 ${activeSection === 'favorites' ? 'active' : ''}`}
                 >
                   <Heart className="h-4 w-4" />
                   <span>收藏工具</span>
                 </button>
                 <button
                   onClick={() => setActiveSection('recent')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center space-x-1 ${
-                    activeSection === 'recent'
-                      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                      : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
-                  }`}
+                  className={`tb-segmented-item flex items-center space-x-1 ${activeSection === 'recent' ? 'active' : ''}`}
                 >
                   <History className="h-4 w-4" />
                   <span>最近使用</span>
@@ -212,14 +215,14 @@ export default function Home() {
 
             {activeSection === 'favorites' && (
               <div className="max-w-4xl mx-auto">
-                <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+                <div className="tb-glass-strong rounded-2xl p-6">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                      <Heart className="h-5 w-5 text-red-500 dark:text-red-400" />
+                    <div className="p-2 bg-[var(--tb-glow)] rounded-lg">
+                      <Heart className="h-5 w-5 text-[var(--tb-accent)]" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">收藏的工具</h2>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">您收藏的常用工具</p>
+                      <h2 className="text-lg font-semibold text-[var(--tb-text)]">收藏的工具</h2>
+                      <p className="text-sm text-[var(--tb-text-muted)]">您收藏的常用工具</p>
                     </div>
                   </div>
                   <FavoriteToolsList
@@ -238,14 +241,14 @@ export default function Home() {
 
             {activeSection === 'recent' && (
               <div className="max-w-4xl mx-auto">
-                <div className="bg-white dark:bg-zinc-800 rounded-xl border border-zinc-200 dark:border-zinc-700 p-6">
+                <div className="tb-glass-strong rounded-2xl p-6">
                   <div className="flex items-center space-x-3 mb-6">
-                    <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <History className="h-5 w-5 text-green-500 dark:text-green-400" />
+                    <div className="p-2 bg-[var(--tb-glow-2)] rounded-lg">
+                      <History className="h-5 w-5 text-[var(--tb-accent-2)]" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">最近使用</h2>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">您最近使用的工具</p>
+                      <h2 className="text-lg font-semibold text-[var(--tb-text)]">最近使用</h2>
+                      <p className="text-sm text-[var(--tb-text-muted)]">您最近使用的工具</p>
                     </div>
                   </div>
                   <RecentlyUsed
@@ -267,9 +270,9 @@ export default function Home() {
         {/* Search result badge */}
         {isSearching && (
           <div className="mb-6 text-center">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-full text-sm">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 tb-pill border border-[var(--tb-border)] text-[var(--tb-text-muted)] text-sm">
               <SearchIcon className="h-4 w-4" />
-              <span>{hasSearchResults ? `找到 ${filteredTools.length} 个相关工具` : '未找到相关工具'}</span>
+              <span>{hasSearchResults ? <>找到 <span className="text-[var(--tb-accent)]">{filteredTools.length}</span> 个相关工具</> : '未找到相关工具'}</span>
             </div>
           </div>
         )}
@@ -281,14 +284,14 @@ export default function Home() {
               <section>
                 <div className="flex items-center mb-6">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
+                    <div className="p-2 bg-[var(--tb-glow-2)] rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-[var(--tb-accent-2)]" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <h2 className="text-xl font-semibold text-[var(--tb-text)]">
                         {isSearching ? '搜索结果' : '可用工具'}
                       </h2>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      <p className="text-sm text-[var(--tb-text-muted)]">
                         {isSearching ? `找到 ${activeTools.length} 个可用工具` : '立即使用这些强大的工具'}
                       </p>
                     </div>
@@ -306,14 +309,14 @@ export default function Home() {
               <section>
                 <div className="flex items-center mb-6">
                   <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                      <Clock className="h-5 w-5 text-orange-500 dark:text-orange-400" />
+                    <div className="p-2 bg-[var(--tb-bg-soft)] rounded-lg">
+                      <Clock className="h-5 w-5 text-amber-400" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <h2 className="text-xl font-semibold text-[var(--tb-text)]">
                         {isSearching ? '搜索结果 - 即将推出' : '即将推出'}
                       </h2>
-                      <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                      <p className="text-sm text-[var(--tb-text-muted)]">
                         {isSearching ? `找到 ${comingSoonTools.length} 个即将推出的工具` : '敬请期待更多实用工具'}
                       </p>
                     </div>
@@ -330,31 +333,31 @@ export default function Home() {
             {(!isSearching || hasSearchResults) && (
               <InfoCollapsiblePanel title="为什么选择开发者工具箱？" defaultExpanded={false}>
                 <div className="text-center mb-6">
-                  <p className="text-zinc-500 dark:text-zinc-400 max-w-2xl mx-auto">
+                  <p className="text-[var(--tb-text-muted)] max-w-2xl mx-auto">
                     我们致力于为开发者和创作者提供最优质的工具体验
                   </p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-full mb-3">
-                      <TrendingUp className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                    <div className="inline-flex items-center justify-center p-3 bg-[var(--tb-glow)] rounded-full mb-3">
+                      <TrendingUp className="h-5 w-5 text-[var(--tb-accent)]" />
                     </div>
-                    <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-2">高效便捷</h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">简洁直观的界面设计，让您快速上手，提升工作效率</p>
+                    <h3 className="text-base font-semibold text-[var(--tb-text)] mb-2">高效便捷</h3>
+                    <p className="text-sm text-[var(--tb-text-muted)]">简洁直观的界面设计，让您快速上手，提升工作效率</p>
                   </div>
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center p-3 bg-green-50 dark:bg-green-900/20 rounded-full mb-3">
-                      <Star className="h-5 w-5 text-green-500 dark:text-green-400" />
+                    <div className="inline-flex items-center justify-center p-3 bg-[var(--tb-glow-2)] rounded-full mb-3">
+                      <Star className="h-5 w-5 text-[var(--tb-accent-2)]" />
                     </div>
-                    <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-2">完全免费</h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">所有工具完全免费使用，无需注册，无使用限制</p>
+                    <h3 className="text-base font-semibold text-[var(--tb-text)] mb-2">完全免费</h3>
+                    <p className="text-sm text-[var(--tb-text-muted)]">所有工具完全免费使用，无需注册，无使用限制</p>
                   </div>
                   <div className="text-center">
-                    <div className="inline-flex items-center justify-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-full mb-3">
-                      <Users className="h-5 w-5 text-purple-500 dark:text-purple-400" />
+                    <div className="inline-flex items-center justify-center p-3 bg-[var(--tb-glow)] rounded-full mb-3">
+                      <Users className="h-5 w-5 text-[var(--tb-accent)]" />
                     </div>
-                    <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100 mb-2">持续更新</h3>
-                    <p className="text-sm text-zinc-500 dark:text-zinc-400">根据用户反馈持续优化，定期推出新功能和工具</p>
+                    <h3 className="text-base font-semibold text-[var(--tb-text)] mb-2">持续更新</h3>
+                    <p className="text-sm text-[var(--tb-text-muted)]">根据用户反馈持续优化，定期推出新功能和工具</p>
                   </div>
                 </div>
               </InfoCollapsiblePanel>
@@ -376,7 +379,7 @@ export default function Home() {
             action={
               <button
                 onClick={() => setSearchTerm('')}
-                className="inline-flex items-center space-x-2 px-5 py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 rounded-lg hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors text-sm font-medium"
+                className="inline-flex items-center space-x-2 px-5 py-2.5 bg-[var(--tb-accent)] text-white rounded-lg hover:opacity-90 transition-colors text-sm font-medium"
               >
                 清空搜索
               </button>

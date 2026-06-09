@@ -32,7 +32,7 @@ export default function Header({
   const showSearch = isHomePage && onSearchChange;
 
   return (
-    <header className="sticky top-0 z-30 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+    <header className="sticky top-0 z-30 tb-glass">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-14 gap-4">
           {/* Left: Logo + back button */}
@@ -40,7 +40,7 @@ export default function Header({
             {showBackButton && !isHomePage && (
               <Link
                 href="/"
-                className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors shrink-0"
+                className="flex items-center gap-1.5 text-sm text-[var(--tb-text-muted)] hover:text-[var(--tb-accent)] transition-colors shrink-0"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span className="hidden sm:inline">返回</span>
@@ -48,15 +48,15 @@ export default function Header({
             )}
 
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 dark:bg-zinc-100">
-                <Wrench className="h-4 w-4 text-white dark:text-zinc-900" />
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-emerald-500">
+                <Wrench className="h-4 w-4 text-white" />
               </div>
               <div className="hidden sm:block">
-                <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                <span className="text-sm font-semibold text-[var(--tb-text)]">
                   {title || '开发者工具箱'}
                 </span>
                 {subtitle && (
-                  <span className="text-xs text-zinc-400 ml-2">{subtitle}</span>
+                  <span className="text-xs text-[var(--tb-text-muted)] ml-2">{subtitle}</span>
                 )}
               </div>
             </Link>
@@ -81,10 +81,10 @@ export default function Header({
             <nav className="hidden md:flex items-center gap-1">
               <Link
                 href="/"
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                   isHomePage
-                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100'
-                    : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                    ? 'tb-pill text-[var(--tb-text)]'
+                    : 'text-zinc-600 dark:text-zinc-300 hover:text-[var(--tb-accent)]'
                 }`}
               >
                 工具箱
@@ -93,14 +93,14 @@ export default function Header({
                 href="https://github.com/MysEon/ToolsBox"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[var(--tb-accent)] transition-colors"
               >
                 <Github className="h-3.5 w-3.5" />
                 <span>GitHub</span>
               </a>
             </nav>
 
-            <div className="w-px h-5 bg-zinc-200 dark:bg-zinc-700 hidden md:block mx-1" />
+            <div className="w-px h-5 bg-[var(--tb-border)] hidden md:block mx-1" />
 
             {showSearch && (
               <div className="md:hidden">
@@ -112,7 +112,7 @@ export default function Header({
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-1.5 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md transition-colors"
+              className="md:hidden p-1.5 text-[var(--tb-text-muted)] hover:text-[var(--tb-accent)] rounded-md transition-colors"
             >
               {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -121,15 +121,15 @@ export default function Header({
 
         {/* Mobile nav */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 py-3">
+          <div className="md:hidden tb-glass border-t border-[var(--tb-border)] py-3">
             <nav className="flex flex-col gap-1">
               <Link
                 href="/"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-full text-sm font-medium transition-colors ${
                   isHomePage
-                    ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100'
-                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                    ? 'tb-pill text-[var(--tb-text)]'
+                    : 'text-zinc-600 dark:text-zinc-300 hover:text-[var(--tb-accent)]'
                 }`}
               >
                 工具箱
@@ -139,7 +139,7 @@ export default function Header({
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-md text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="px-3 py-2 rounded-full text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-[var(--tb-accent)] transition-colors"
               >
                 GitHub
               </a>

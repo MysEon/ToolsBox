@@ -6,7 +6,7 @@ import ToolPageHeader from '@/shared/components/ToolPageHeader';
 
 export default function CryptoToolPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen tb-app-bg">
       <ToolPageHeader
         title="双向文本加密解密"
         subtitle="支持主流加密算法和古典密码的专业加密解密工具"

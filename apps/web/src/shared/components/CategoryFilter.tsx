@@ -11,7 +11,7 @@ interface CategoryFilterProps {
 export function CategoryFilter({ categories, selectedCategory, onCategoryChange }: CategoryFilterProps) {
   return (
     <div className="flex items-center space-x-4">
-      <div className="flex items-center space-x-2 text-zinc-500 dark:text-zinc-400 shrink-0">
+      <div className="flex items-center space-x-2 text-[var(--tb-text-muted)] shrink-0">
         <Filter className="h-4 w-4" />
         <span className="text-sm font-medium">分类筛选:</span>
       </div>
@@ -20,10 +20,10 @@ export function CategoryFilter({ categories, selectedCategory, onCategoryChange 
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
               selectedCategory === category
-                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                : 'bg-white dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600'
+                ? 'bg-[var(--tb-accent)] text-white shadow-[0_0_12px_var(--tb-glow)]'
+                : 'bg-[var(--tb-surface)] text-[var(--tb-text-muted)] border border-[var(--tb-border)] hover:border-[var(--tb-accent)] hover:text-[var(--tb-accent)]'
             }`}
           >
             {category}

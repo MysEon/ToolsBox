@@ -74,7 +74,7 @@ const regions = [
 
 export default function NintendoOfficialPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen tb-app-bg">
       <ToolPageHeader
         title="Nintendo 官网导航"
         subtitle="快速访问任天堂全球各区域官方网站"

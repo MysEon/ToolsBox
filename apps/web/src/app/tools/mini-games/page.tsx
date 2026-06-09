@@ -6,7 +6,7 @@ import ToolPageHeader from '@/shared/components/ToolPageHeader';
 
 export default function MiniGamesPage() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen tb-app-bg">
       <ToolPageHeader
         title="小游戏合集"
         subtitle="休闲娱乐，放松一下"

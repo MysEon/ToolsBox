@@ -17,7 +17,7 @@ export default function USAIdentityGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen tb-app-bg">
       <Header
         showBackButton={true}
         title="美国虚拟身份生成器"

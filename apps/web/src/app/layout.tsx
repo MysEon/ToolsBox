@@ -34,10 +34,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <head>
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#05070a" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors duration-200`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased tb-app-bg tb-text transition-colors duration-300`}
       >
         <ThemeProvider>
           <UserPreferencesProvider>

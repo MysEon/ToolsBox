@@ -10,10 +10,10 @@ interface ThemeToggleProps {
   showLabel?: boolean;
 }
 
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
-  variant = 'button', 
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({
+  variant = 'button',
   size = 'md',
-  showLabel = false 
+  showLabel = false
 }) => {
   const { theme, actualTheme, setTheme, toggleTheme } = useTheme();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -35,11 +35,10 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   const buttonClasses = `
     ${sizeClasses[size]}
     inline-flex items-center justify-center
-    rounded-lg border border-zinc-200 dark:border-zinc-700
-    bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm
-    text-zinc-700 dark:text-zinc-200
-    hover:bg-zinc-50 dark:hover:bg-zinc-700
-    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    rounded-full border border-[var(--tb-border)] bg-[var(--tb-surface)] backdrop-blur-sm
+    text-[var(--tb-text)]
+    hover:border-[var(--tb-accent)] hover:shadow-[0_0_12px_var(--tb-glow)]
+    focus:outline-none focus:ring-2 focus:ring-[var(--tb-accent)]
     transition-all duration-200
   `;
 
@@ -87,9 +86,9 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
             className="fixed inset-0 z-10"
             onClick={() => setIsDropdownOpen(false)}
           />
-          
+
           {/* 下拉菜单 */}
-          <div className="absolute right-0 mt-2 w-48 z-20 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1">
+          <div className="absolute right-0 mt-2 w-48 z-20 tb-glass-strong rounded-lg shadow-xl border border-[var(--tb-border)] py-1">
             {themeOptions.map((option) => (
               <button
                 key={option.value}
@@ -99,24 +98,24 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
                 }}
                 className={`
                   w-full px-4 py-2 text-left flex items-center space-x-3
-                  hover:bg-gray-50 dark:hover:bg-gray-700
+                  hover:bg-[var(--tb-bg-soft)]
                   transition-colors duration-150
-                  ${theme === option.value 
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20' 
-                    : 'text-gray-700 dark:text-gray-200'
+                  ${theme === option.value
+                    ? 'text-[var(--tb-accent)] bg-[var(--tb-glow)]'
+                    : 'text-[var(--tb-text)]'
                   }
                 `}
               >
                 {option.icon}
                 <span>{option.label}</span>
                 {theme === option.value && (
-                  <div className="ml-auto w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full" />
+                  <div className="ml-auto w-2 h-2 bg-[var(--tb-accent)] rounded-full" />
                 )}
               </button>
             ))}
-            
-            <div className="border-t border-gray-200 dark:border-gray-700 mt-1 pt-1">
-              <div className="px-4 py-2 text-xs text-gray-500 dark:text-gray-400">
+
+            <div className="border-t border-[var(--tb-border)] mt-1 pt-1">
+              <div className="px-4 py-2 text-xs text-[var(--tb-text-muted)]">
                 当前: {actualTheme === 'dark' ? '深色模式' : '浅色模式'}
               </div>
             </div>
