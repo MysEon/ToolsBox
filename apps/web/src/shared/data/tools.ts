@@ -1,4 +1,4 @@
-import { Globe, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap, ImageDown, FileStack } from 'lucide-react';
+import { Globe, FileText, Database, Code, Palette, Shield, Download, Lock, Gamepad2, GraduationCap, ImageDown, FileStack, Braces, Clock3, Link2, Hash, FilePenLine } from 'lucide-react';
 import NintendoIcon from '@/shared/components/icons/NintendoIcon';
 import type { ComponentType } from 'react';
 
@@ -168,6 +168,61 @@ export const tools: Tool[] = [
     category: '实用工具',
     features: ['多种类型', '自定义样式', '批量生成', '高清导出'],
     color: 'from-cyan-500 to-blue-600'
+  },
+  {
+    id: 'regex-tester',
+    name: '🔍 正则表达式测试器',
+    description: '实时测试正则匹配结果，展示捕获组、命名分组和常用正则模板，所有计算均在本地完成',
+    icon: Braces,
+    href: '/tools/regex-tester',
+    status: 'active',
+    category: '开发工具',
+    features: ['实时匹配', '捕获组', '模板库', '结果复制', '本地处理'],
+    color: 'from-cyan-500 to-blue-600'
+  },
+  {
+    id: 'timestamp-converter',
+    name: '⏱️ 时间戳转换器',
+    description: 'Unix 时间戳与可读时间双向转换，支持秒/毫秒识别、时区切换和当前时间复制',
+    icon: Clock3,
+    href: '/tools/timestamp-converter',
+    status: 'active',
+    category: '开发工具',
+    features: ['Unix转换', '时区切换', '当前时间', '批量转换', '一键复制'],
+    color: 'from-emerald-500 to-cyan-600'
+  },
+  {
+    id: 'url-codec',
+    name: '🔗 URL 编解码',
+    description: 'URL 编码解码、查询参数解析与批量处理工具，支持参数表格化和 JSON 导出',
+    icon: Link2,
+    href: '/tools/url-codec',
+    status: 'active',
+    category: '开发工具',
+    features: ['URL编码', 'URL解码', '参数解析', '批量处理', 'JSON导出'],
+    color: 'from-sky-500 to-indigo-600'
+  },
+  {
+    id: 'hash-generator',
+    name: '#️⃣ Hash 生成器',
+    description: '为文本和文件生成 MD5、SHA1、SHA256、SHA512 摘要，适合校验和开发调试',
+    icon: Hash,
+    href: '/tools/hash-generator',
+    status: 'active',
+    category: '安全工具',
+    features: ['MD5', 'SHA1', 'SHA256', 'SHA512', '文件校验'],
+    color: 'from-amber-500 to-orange-600'
+  },
+  {
+    id: 'markdown-editor',
+    name: '✍️ Markdown 编辑器',
+    description: '分屏 Markdown 编辑与实时预览，支持代码高亮、HTML 复制和静态 HTML 导出',
+    icon: FilePenLine,
+    href: '/tools/markdown-editor',
+    status: 'active',
+    category: '开发工具',
+    features: ['实时预览', '分屏编辑', '代码高亮', 'HTML导出', '本地处理'],
+    color: 'from-violet-500 to-fuchsia-600'
   }
 ];
 
