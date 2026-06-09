@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ExternalLink, Clock, Newspaper, RefreshCw, AlertCircle,
   ChevronLeft, ChevronRight, Languages, Eye, EyeOff,
@@ -36,12 +37,14 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [showTranslated, setShowTranslated] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const hasLoaded = useRef(false);
 
   const { preferences } = useUserPreferences();
 
   // Detect desktop via matchMedia
   useEffect(() => {
+    setMounted(true);
     const mq = window.matchMedia('(min-width: 1024px)');
     setIsDesktop(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
@@ -89,7 +92,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
   };
 
   // Desktop only — return nothing on mobile/tablet
-  if (!isDesktop) return null;
+  if (!isDesktop || !mounted) return null;
 
   // Translate a single news item title
   const translateNewsItem = async (id: string) => {
@@ -161,7 +164,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
     }
   };
 
-  return (
+  return createPortal(
     <div
       className={`fixed top-20 right-0 z-40 transition-all duration-300 ease-in-out ${
         isExpanded ? 'w-96' : 'w-12'
@@ -351,6 +354,7 @@ export default function SidebarNewsPanel({ maxItems = 15 }: SidebarNewsPanelProp
           </span>
         </div>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 }
