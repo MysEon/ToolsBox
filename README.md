@@ -92,17 +92,14 @@ Developed By AI
 ### 本地开发
 
 ```bash
-# 进入项目目录
-cd usa-location
-
-# 安装依赖
-npm install
+# 安装 Web 应用依赖
+npm --prefix apps/web install
 
 # 启动开发服务器
 npm run dev
 
 # 访问应用
-open http://localhost:3001
+open http://localhost:3000
 ```
 
 ### 部署到GitHub Pages
@@ -136,27 +133,28 @@ open http://localhost:3001
 
 ```
 ToolsBox/
-├── .github/workflows/deploy.yml    # GitHub Actions部署配置
-├── image-compressor/               # 图片压缩工具（单页HTML）
+├── .github/workflows/deploy.yml    # GitHub Actions 部署配置
+├── apps/
+│   └── web/                        # Next.js Web 应用
+│       ├── src/                    # 源代码
+│       │   ├── app/                # Next.js App Router 路由
+│       │   ├── shared/             # 共享组件、数据、服务和工具函数
+│       │   └── tools/              # 各工具功能模块
+│       │       ├── usa-identity/   # 美国身份生成器
+│       │       ├── dev-tools/      # 编程软件下载中心
+│       │       ├── crypto-tool/    # 加密解密工具
+│       │       ├── mini-games/     # 小游戏合集
+│       │       └── academic-center/# 学术中心
+│       ├── docs/                   # 应用级架构文档
+│       ├── public/                 # 静态资源
+│       ├── package.json            # Web 应用依赖
+│       └── next.config.ts          # Next.js 配置
+├── image-compressor/               # 图片压缩工具（单页 HTML）
 │   └── index.html                  # 完整网页应用
-├── spongebob-test/                 # 海绵宝宝人格测试（单页HTML）
+├── spongebob-test/                 # 海绵宝宝人格测试（单页 HTML）
 │   └── index.html                  # 完整网页应用
-├── usa-location/                   # Next.js应用
-│   ├── src/                        # 源代码
-│   │   ├── app/                    # 页面路由
-│   │   ├── shared/                 # 共享组件和工具
-│   │   ├── tools/                  # 各工具模块
-│   │   │   ├── usa-identity/       # 美国身份生成器
-│   │   │   ├── dev-tools/          # 编程软件下载中心
-│   │   │   ├── crypto-tool/        # 加密解密工具
-│   │   │   ├── mini-games/         # 小游戏合集
-│   │   │   └── academic-center/    # 学术中心
-│   │   ├── data/                   # 数据配置
-│   │   └── utils/                  # 工具函数（包含新闻服务）
-│   ├── public/                     # 静态资源
-│   ├── package.json                # 项目依赖
-│   └── next.config.ts              # Next.js配置
 ├── DEPLOYMENT.md                   # 部署指南
+├── package.json                    # Monorepo 入口脚本
 └── README.md                       # 项目说明
 ```
 

@@ -1,0 +1,18 @@
+{
+  "name": "toolsbox",
+  "version": "1.0.0",
+  "private": true,
+  "description": "开发者工具箱 monorepo",
+  "scripts": {
+    "dev": "npm --prefix apps/web run dev",
+    "dev:web": "npm --prefix apps/web run dev",
+    "build": "npm --prefix apps/web run build",
+    "build:web": "npm --prefix apps/web run build",
+    "export": "npm --prefix apps/web run export",
+    "lint": "npm --prefix apps/web run lint",
+    "typecheck": "npm --prefix apps/web run typecheck"
+  },
+  "workspaces": [
+    "apps/*"
+  ]
+}

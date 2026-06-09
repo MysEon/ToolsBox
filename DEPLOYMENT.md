@@ -9,11 +9,12 @@ ToolsBox/                       # 项目根目录（GitHub仓库根目录）
 ├── .github/
 │   └── workflows/
 │       └── deploy.yml          # GitHub Actions工作流
-├── usa-location/               # Next.js应用目录
-│   ├── src/                    # 源代码
-│   ├── package.json            # 项目依赖
-│   ├── next.config.ts          # Next.js配置
-│   └── dist/                   # 构建输出（自动生成）
+├── apps/
+│   └── web/                    # Next.js Web应用目录
+│       ├── src/                # 源代码
+│       ├── package.json        # 应用依赖
+│       ├── next.config.ts      # Next.js配置
+│       └── dist/               # 构建输出（自动生成）
 └── DEPLOYMENT.md               # 本文档
 ```
 
@@ -54,13 +55,13 @@ git push origin main
 ## ⚙️ 配置说明
 
 ### GitHub Actions工作流 (.github/workflows/deploy.yml)
-- **工作目录**: `./usa-location`（Next.js应用所在目录）
-- **Node.js版本**: 18
-- **缓存**: npm缓存，路径为 `./usa-location/package-lock.json`
-- **构建命令**: `npm run export`（在usa-location目录中执行）
-- **部署目录**: `./usa-location/dist`
+- **工作目录**: `./apps/web`（Next.js应用所在目录）
+- **Node.js版本**: 20
+- **缓存**: npm缓存，路径为 `./apps/web/package-lock.json`
+- **构建命令**: `npm run export`（在apps/web目录中执行）
+- **部署目录**: `./apps/web/dist`
 
-### Next.js配置 (usa-location/next.config.ts)
+### Next.js配置 (apps/web/next.config.ts)
 ```typescript
 const nextConfig: NextConfig = {
   output: 'export',              // 启用静态导出
@@ -78,7 +79,7 @@ const nextConfig: NextConfig = {
 
 ```bash
 # 进入Next.js应用目录
-cd usa-location
+cd apps/web
 
 # 构建静态文件
 npm run export
@@ -100,7 +101,7 @@ npx serve dist
    - 确保只有我们的deploy.yml存在
 
 3. **Actions报错：找不到package.json**
-   - 确认working-directory设置为./usa-location
+   - 确认working-directory设置为./apps/web
    - 确认cache-dependency-path正确
 
 4. **页面显示404**
@@ -115,16 +116,16 @@ npx serve dist
 ### 调试命令
 
 ```bash
-# 检查构建（在usa-location目录中）
-cd usa-location
+# 检查构建（在apps/web目录中）
+cd apps/web
 npm run lint
 npm run export
 
 # 查看构建文件
-ls -la usa-location/dist/
+ls -la apps/web/dist/
 
 # 本地测试
-cd usa-location
+cd apps/web
 npx serve dist
 ```
 
